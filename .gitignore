@@ -1,8 +1,10 @@
 # Intellij
 .idea/
+out/
 
 # Gradle
 .gradle/
+build/
 
 # Compiled class file
 *.class
