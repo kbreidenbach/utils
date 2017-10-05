@@ -24,7 +24,7 @@ public class ForComp {
     public <T> ForComp(Function<T, ?> function, List<T> iterable) {
         this.function = function;
         this.iterables.add(iterable);
-        if (!iterable.isEmpty()) classes.add(iterable.get(0).getClass());
+        this.classes.add(iterable.isEmpty() ? Object.class : iterable.get(0).getClass());
     }
 
     @SafeVarargs
@@ -32,15 +32,16 @@ public class ForComp {
         this(function, List.of(items));
     }
 
-    public <T> ForComp with(ForFunction<T, ?> function, List nextIterable) {
+    public <T> ForComp with(ForFunction<T, ?> function, List<T> nextIterable) {
         functions.add(function);
         iterables.add(nextIterable);
+        classes.add(iterables.isEmpty() ? Object.class : nextIterable.get(0).getClass());
         return this;
     }
 
-    public final ForComp with(Object[]...nextItems) {
-        iterables.add(List.of(nextItems));
-        return this;
+    @SafeVarargs
+    public final <T> ForComp with(ForFunction<T, ?> function, T... nextItems) {
+        return with(function, List.of(nextItems));
     }
 
     public Stream<?> yield() {
@@ -62,17 +63,17 @@ public class ForComp {
     }
 
     private void handleIterables(List<List> iterables, List<List> results, List row, int index, int functionIndex) {
+        final Class<?> clazz = classes.get(index);
 
         for (Object item : iterables.get(0)) {
-
             if (functionIndex == -1) {
                 row.set(index, function.apply(item));
             } else {
                 final ForFunction forFunction = functions.get(functionIndex);
                 final int[] indexes = forFunction.indexes;
-                final Object[] dataPoints = new Object[1 + indexes.length];
-                dataPoints[0] = item;
-                for (int i = 0; i < indexes.length; i++) dataPoints[index + 1] = row.get(i);
+                final List dataPoints = new ArrayList<>(1 + indexes.length);
+                dataPoints.add(item);
+                for (int i = 0; i < indexes.length; i++) dataPoints.add(row.get(i));
                 row.set(index, forFunction.apply(dataPoints));
             }
 
@@ -101,16 +102,14 @@ public class ForComp {
             return indexes;
         }
 
-        @SafeVarargs
-        private R apply(T...data) {
-            if (data.length - 1 != indexes.length) throw new IllegalArgumentException("incorrect number of data points");
-
+        private R apply(List<T> data) {
+            if (data.size() - 1 != indexes.length) throw new IllegalArgumentException("incorrect number of data points");
             return function.apply(data);
         }
     }
 
     @FunctionalInterface
     public interface NFunction<T, R> {
-        R apply(T...inputs);
+        R apply(List<T> inputs);
     }
 }
