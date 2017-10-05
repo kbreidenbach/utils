@@ -12,25 +12,27 @@ import java.util.stream.Stream;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class ForComp {
 
+    private final List<Class<?>> classes = new ArrayList<>();
     private final List<List> iterables = new ArrayList<>();
     private final List<ForFunction> functions = new ArrayList<>();
     private final Function function;
 
-    public static ForFunction forFunction(NFunction function, int...indexes) {
-        return new ForFunction(function, indexes);
+    public static <T, R> ForFunction<T, R> forFunction(NFunction<T, R> function, int...indexes) {
+        return new ForFunction<>(function, indexes);
     }
 
-    public ForComp(Function function, List iterable) {
+    public <T> ForComp(Function<T, ?> function, List<T> iterable) {
         this.function = function;
-        iterables.add(iterable);
+        this.iterables.add(iterable);
+        if (!iterable.isEmpty()) classes.add(iterable.get(0).getClass());
     }
 
-    public ForComp(Function function, Object ... items) {
-        this.function = function;
-        iterables.add(List.of(items));
+    @SafeVarargs
+    public <T> ForComp(Function<T, ?> function, T ... items) {
+        this(function, List.of(items));
     }
 
-    public ForComp with(ForFunction function, List nextIterable) {
+    public <T> ForComp with(ForFunction<T, ?> function, List nextIterable) {
         functions.add(function);
         iterables.add(nextIterable);
         return this;
@@ -86,11 +88,11 @@ public class ForComp {
         }
     }
 
-    public static class ForFunction {
-        private final NFunction function;
+    public static class ForFunction<T, R> {
+        private final NFunction<T, R> function;
         private final int[] indexes;
 
-        private ForFunction(NFunction function, int[] indexes) {
+        private ForFunction(NFunction<T, R> function, int[] indexes) {
             this.function = function;
             this.indexes = indexes;
         }
@@ -99,7 +101,8 @@ public class ForComp {
             return indexes;
         }
 
-        private Object apply(Object...data) {
+        @SafeVarargs
+        private R apply(T...data) {
             if (data.length - 1 != indexes.length) throw new IllegalArgumentException("incorrect number of data points");
 
             return function.apply(data);
@@ -107,7 +110,7 @@ public class ForComp {
     }
 
     @FunctionalInterface
-    public interface NFunction {
-        Object apply(Object...inputs);
+    public interface NFunction<T, R> {
+        R apply(T...inputs);
     }
 }
