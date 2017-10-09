@@ -92,26 +92,39 @@ public class ForComp {
 
         for (Object item : iterables.get(0)) {
             final ForFunction forFunction = functions.get(functionIndex);
-            if (forFunction != null) {
-                final int[] indexes = forFunction.indexes;
-                final List dataPoints = new ArrayList<>(1 + indexes.length);
-                dataPoints.add(item);
-                for (int i : indexes) dataPoints.add(row.get(i));
-
-                row.set(index, forFunction.apply(dataPoints));
+            if (item instanceof Try) {
+                final Try t = (Try)item;
+                if (((Try) item).isSuccess()) {
+                    ((Try) item).get().ifPresent(i -> processItem(row, index, i, forFunction));
+                }
             } else {
-                row.set(index, item);
+                processItem(row, index, item, forFunction);
             }
 
             if (iterables.size() > 1) {
                 handleIterables(iterables.subList(1, iterables.size()), results, row, index + 1, functionIndex + 1);
             } else {
-                List newRow = new ArrayList();
+                final List newRow = new ArrayList();
 
                 newRow.addAll(row);
 
                 results.add(newRow);
             }
+        }
+    }
+
+    private void processItem(List row, int index, Object item, ForFunction forFunction) {
+        if (forFunction != null) {
+            final int[] indexes = forFunction.indexes;
+            final List dataPoints = new ArrayList<>(1 + indexes.length);
+
+            dataPoints.add(item);
+
+            for (int i : indexes) dataPoints.add(row.get(i));
+
+            row.set(index, forFunction.apply(dataPoints));
+        } else {
+            row.set(index, item);
         }
     }
 
