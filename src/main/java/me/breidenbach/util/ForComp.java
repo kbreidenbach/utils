@@ -8,7 +8,7 @@ import java.util.stream.Stream;
  * @author Kevin E. Breidenbach
  * Date: 10/1/17
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
 public class ForComp {
 
     private final List<Class<?>> classes = new ArrayList<>();
@@ -29,6 +29,15 @@ public class ForComp {
         return this;
     }
 
+    public <T> ForComp with(List<T> nextIterable) {
+        return with(null, nextIterable);
+    }
+
+    @SafeVarargs
+    public final <T> ForComp with(T... nextItems) {
+        return with(null, List.of(nextItems));
+    }
+
     @SafeVarargs
     public final <T> ForComp with(ForFunction<T, ?> function, T... nextItems) {
         return with(function, List.of(nextItems));
@@ -37,9 +46,23 @@ public class ForComp {
     public Stream<?> yield() {
         switch (iterables.size()) {
             case 0 : return Stream.empty();
-            case 1 : return iterables.get(0).stream(); //.map(functions.get(0));
-            default : return handleIterables().stream();
+            default : return mapStream(handleIterables().stream());
         }
+    }
+
+    private Stream<?> mapStream(Stream<List> stream) {
+        return stream.map(data -> {
+            final List result = new ArrayList<> (data.size());
+            for (int i = 0; i < data.size(); i++) {
+                if (functions.get(i) != null) result.add(data.get(i));
+            }
+            if (result.size() == 1) {
+                return result.get(0);
+            }
+            else {
+                return result;
+            }
+        });
     }
 
     private List<List> handleIterables() {
@@ -57,11 +80,16 @@ public class ForComp {
 
         for (Object item : iterables.get(0)) {
             final ForFunction forFunction = functions.get(functionIndex);
-            final int[] indexes = forFunction.indexes;
-            final List dataPoints = new ArrayList<>(1 + indexes.length);
-            dataPoints.add(item);
-            for (int i = 0; i < indexes.length; i++) dataPoints.add(row.get(i));
-            row.set(index, forFunction.apply(dataPoints));
+            if (forFunction != null) {
+                final int[] indexes = forFunction.indexes;
+                final List dataPoints = new ArrayList<>(1 + indexes.length);
+                dataPoints.add(item);
+                for (int i : indexes) dataPoints.add(row.get(i));
+
+                row.set(index, forFunction.apply(dataPoints));
+            } else {
+                row.set(index, item);
+            }
 
             if (iterables.size() > 1) {
                 handleIterables(iterables.subList(1, iterables.size()), results, row, index + 1, functionIndex + 1);

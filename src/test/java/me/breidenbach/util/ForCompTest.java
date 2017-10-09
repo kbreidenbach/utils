@@ -3,21 +3,73 @@ package me.breidenbach.util;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static me.breidenbach.util.ForComp.forFunction;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 /**
  * @author Kevin E. Breidenbach
  * Date: 10/1/17
  */
+@SuppressWarnings("unchecked")
 class ForCompTest {
+    @Test
+    void simple() {
+        final List<Integer> numbers = List.of(1, 2);
+        final Stream stream = new ForComp().
+                with(forFunction(i -> i.get(0)), numbers).
+                yield();
+
+        assertThat(stream.collect(Collectors.toList()), is(equalTo(numbers)));
+    }
 
     @Test
-    void forCompTest() {
-        new ForComp().
-                with(forFunction(i -> i.get(0)), List.of(1, 2, 3, 4)).
-                with(forFunction(i -> i.get(0) * i.get(1),0), List.of(10,20)).
-                with(forFunction(j -> j.get(0) + j.get(1) + j.get(2), 0, 1), List.of(100, 200)).
-                yield().forEach(System.out::println);
+    void nestedLoop() {
+        final List<Integer> outer = List.of(1, 2);
+        final List<Integer> inner = List.of(20, 40);
+        final List<List<Integer>> expected = List.of(
+                List.of(1, 20),
+                List.of(1, 40),
+                List.of(2, 20),
+                List.of(2, 40));
+
+        final Stream stream = new ForComp().
+                with(forFunction(i -> i.get(0)), outer).
+                with(forFunction(j -> j.get(0)), inner).
+                yield();
+
+        assertThat(stream.collect(Collectors.toList()), is(equalTo(expected)));
+    }
+
+    @Test
+    void nestedLoopWithSum() {
+        final List<Integer> outer = List.of(1, 2);
+        final List<Integer> inner = List.of(20, 40);
+        final List<Integer> expected = List.of(21, 41, 22, 42);
+
+        final Stream stream = new ForComp().
+                with(outer).
+                with(forFunction(j -> j.get(0) + j.get(1), 0), inner).
+                yield();
+
+        assertThat(stream.collect(Collectors.toList()), is(equalTo(expected)));
+    }
+
+    @Test
+    void stringConcatenation() {
+        final List<String> outer = List.of("Hello", "Goodbye");
+        final List<String> inner = List.of("Dave", "John");
+        final List<String> expected = List.of("Hello Dave", "Hello John", "Goodbye Dave", "Goodbye John");
+
+        final Stream stream = new ForComp().
+                with(outer).
+                with(forFunction(j -> j.get(1) + " " + j.get(0), 0), inner).
+                yield();
+
+        assertThat(stream.collect(Collectors.toList()), is(equalTo(expected)));
     }
 }
