@@ -72,4 +72,18 @@ class ForCompTest {
 
         assertThat(stream.collect(Collectors.toList()), is(equalTo(expected)));
     }
+
+    @Test
+    void stringConcatenationWithYieldFunction() {
+        final List<String> outer = List.of("Hello", "Goodbye");
+        final List<String> inner = List.of("Dave", "John");
+        final List<String> expected = List.of("HELLO DAVE", "HELLO JOHN", "GOODBYE DAVE", "GOODBYE JOHN");
+
+        final Stream stream = new ForComp().
+                with(outer).
+                with(forFunction(j -> j.get(1) + " " + j.get(0), 0), inner).
+                yield(s -> ((String)s).toUpperCase());
+
+        assertThat(stream.collect(Collectors.toList()), is(equalTo(expected)));
+    }
 }

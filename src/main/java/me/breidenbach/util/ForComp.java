@@ -2,6 +2,7 @@ package me.breidenbach.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -44,9 +45,20 @@ public class ForComp {
     }
 
     public Stream<?> yield() {
+        return yield(null);
+    }
+
+    public Stream<?> yield(Function function) {
         switch (iterables.size()) {
             case 0 : return Stream.empty();
-            default : return mapStream(handleIterables().stream());
+            default : {
+                final Stream<?> stream = mapStream(handleIterables().stream());
+                if (function != null) {
+                    return stream.map(function);
+                } else {
+                    return stream;
+                }
+            }
         }
     }
 
