@@ -17,8 +17,6 @@ import static org.hamcrest.Matchers.is;
  */
 @SuppressWarnings("unchecked")
 class ForCompTest {
-    private static final Throwable ERROR = new Exception("BAD TEST");
-
     @Test
     void simple() {
         final List<Integer> numbers = List.of(1, 2);
