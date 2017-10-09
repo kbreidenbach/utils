@@ -95,10 +95,11 @@ class ForCompTest {
     @Test
     void simpleTry() {
         final Try<Integer> test = new Try<>(() -> 2);
-        final List<Integer> expected = List.of(2);
+        final List<Integer> expected = List.of(4);
 
         final Stream result = new ForComp().
-                with(forFunction(i -> i.get(0)), test).
+                with(test).
+                with(forFunction(i -> i.get(0) + i.get(1), 0), List.of(2)).
                 yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
