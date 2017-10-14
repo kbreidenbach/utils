@@ -38,7 +38,7 @@ class TryTest {
 
     @Test
     void onSuccess() {
-        final Try<String> testTry = new Try<>(TEST);
+        final Try<String> testTry = new Success<>(TEST);
 
         testTry.onSuccess(successTester);
 
@@ -49,7 +49,7 @@ class TryTest {
 
     @Test
     void onFailure() {
-        final Try<String> testTry = new Try<>(ERROR);
+        final Try<String> testTry = new Failure<>(ERROR);
 
         testTry.onFailure(failureTester);
 

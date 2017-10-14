@@ -23,11 +23,11 @@ public class Try<T> {
         }
     }
 
-    Try(T payload) {
+    protected Try(T payload) {
         this.payload = payload;
     }
 
-    Try(Throwable failure) {
+    protected Try(Throwable failure) {
         this.failure = failure;
     }
 

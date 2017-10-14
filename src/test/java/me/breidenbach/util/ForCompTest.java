@@ -28,6 +28,17 @@ class ForCompTest {
     }
 
     @Test
+    void simpleWithIff() {
+        final List<Integer> numbers = List.of(1, 2, 3, 4);
+        final List<Integer> expected = List.of(2, 4);
+        final Stream result = new ForComp().
+                with(forFunction(i -> i.get(0)), numbers).<Integer>iff(i -> i % 2 == 0).
+                yield();
+
+        assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
+    }
+
+    @Test
     void nestedLoop() {
         final List<Integer> outer = List.of(1, 2);
         final List<Integer> inner = List.of(20, 40);
