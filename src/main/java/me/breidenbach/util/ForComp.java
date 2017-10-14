@@ -26,10 +26,12 @@ public class ForComp {
         return new ForComprehension().with(nextIterable);
     }
 
+    @SafeVarargs
     public static <T> ForComprehension with(T... nextItems) {
         return new ForComprehension().with(nextItems);
     }
 
+    @SafeVarargs
     public static <T> ForComprehension with(ForFunction<T, ?> function, T... nextItems) {
         return new ForComprehension().with(function, nextItems);
     }
