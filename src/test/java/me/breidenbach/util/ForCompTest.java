@@ -20,8 +20,7 @@ class ForCompTest {
     @Test
     void simple() {
         final List<Integer> numbers = List.of(1, 2);
-        final Stream result = new ForComp().
-                with(forFunction(i -> i.get(0)), numbers).
+        final Stream result = ForComp.with(forFunction(i -> i.get(0)), numbers).
                 yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(numbers)));
@@ -31,8 +30,7 @@ class ForCompTest {
     void simpleWithIff() {
         final List<Integer> numbers = List.of(1, 2, 3, 4);
         final List<Integer> expected = List.of(2, 4);
-        final Stream result = new ForComp().
-                with(forFunction(i -> i.get(0)), numbers).<Integer>iff(i -> i % 2 == 0).
+        final Stream result = ForComp.with(forFunction(i -> i.get(0)), numbers).<Integer>iff(i -> i % 2 == 0).
                 yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
@@ -48,8 +46,7 @@ class ForCompTest {
                 List.of(2, 20),
                 List.of(2, 40));
 
-        final Stream result = new ForComp().
-                with(forFunction(i -> i.get(0)), outer).
+        final Stream result = ForComp.with(forFunction(i -> i.get(0)), outer).
                 with(forFunction(j -> j.get(0)), inner).
                 yield();
 
@@ -62,8 +59,7 @@ class ForCompTest {
         final List<Integer> inner = List.of(20, 40);
         final List<Integer> expected = List.of(21, 41, 22, 42);
 
-        final Stream result = new ForComp().
-                with(outer).
+        final Stream result = ForComp.with(outer).
                 with(forFunction(j -> j.get(0) + j.get(1), 0), inner).
                 yield();
 
@@ -76,8 +72,7 @@ class ForCompTest {
         final List<String> inner = List.of("Dave", "John");
         final List<String> expected = List.of("Hello Dave", "Hello John", "Goodbye Dave", "Goodbye John");
 
-        final Stream result = new ForComp().
-                with(outer).
+        final Stream result = ForComp.with(outer).
                 with(forFunction(j -> j.get(1) + " " + j.get(0), 0), inner).
                 yield();
 
@@ -90,8 +85,20 @@ class ForCompTest {
         final List<String> inner = List.of("Dave", "John");
         final List<String> expected = List.of("HELLO DAVE", "HELLO JOHN", "GOODBYE DAVE", "GOODBYE JOHN");
 
-        final Stream result = new ForComp().
-                with(outer).
+        final Stream result = ForComp.with(outer).
+                with(forFunction(j -> j.get(1) + " " + j.get(0), 0), inner).
+                yield(s -> ((String)s).toUpperCase());
+
+        assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
+    }
+
+    @Test
+    void stringConcatenationWithYieldFunctionAndIff() {
+        final List<String> outer = List.of("Hello", "Goodbye");
+        final List<String> inner = List.of("Dave", "John");
+        final List<String> expected = List.of("HELLO DAVE", "HELLO JOHN");
+
+        final Stream result = ForComp.with(outer).<String>iff(str -> str.equals("Hello")).
                 with(forFunction(j -> j.get(1) + " " + j.get(0), 0), inner).
                 yield(s -> ((String)s).toUpperCase());
 
@@ -103,8 +110,7 @@ class ForCompTest {
         final Try<Integer> test = new Try<>(() -> 2);
         final List<Integer> expected = List.of(4);
 
-        final Stream result = new ForComp().
-                with(test).
+        final Stream result = ForComp.with(test).
                 with(forFunction(i -> i.get(0) + i.get(1), 0), List.of(2)).
                 yield();
 
