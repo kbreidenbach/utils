@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.breidenbach.util.Match.classCase;
-import static me.breidenbach.util.Match.def;
+import static me.breidenbach.util.Match.typeCase;
+import static me.breidenbach.util.Match.defaultCase;
 import static me.breidenbach.util.Match.match;
 import static me.breidenbach.util.Match.matchCase;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,7 +55,7 @@ class MatchTest {
         final List<Integer> list = new ArrayList<>();
         final int expected = 10;
         final int result = match(list,
-                classCase(ArrayList.class, (i) -> expected));
+                typeCase(ArrayList.class, (i) -> expected));
 
         assertThat(result, is(equalTo(expected)));
     }
@@ -67,7 +67,7 @@ class MatchTest {
 
         final int result = match(number,
                 matchCase(i -> i == 1, i -> i),
-                def(i -> expected)
+                defaultCase(i -> expected)
         );
 
         assertThat(result, is(equalTo(expected)));
@@ -94,9 +94,9 @@ class MatchTest {
     private void matchMessage(Message message) throws MatchException {
         // unfortunately we can't get away from the need to return null on a Java Void type :-(
         match(message,
-                classCase(MessageOne.class, m -> { methodOne(); return null; }),
-                classCase(MessageTwo.class, m -> { methodTwo(); return null; }),
-                classCase(MessageThree.class, m -> { methodThree(); return null; })
+                typeCase(MessageOne.class, m -> { methodOne(); return null; }),
+                typeCase(MessageTwo.class, m -> { methodTwo(); return null; }),
+                typeCase(MessageThree.class, m -> { methodThree(); return null; })
         );
     }
 

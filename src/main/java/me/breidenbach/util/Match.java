@@ -22,11 +22,11 @@ public class Match {
         return new Case<>(predicate, closure);
     }
 
-    public static <T, R> Case<T, R> def(Function<? super T, R> closure) {
+    public static <T, R> Case<T, R> defaultCase(Function<? super T, R> closure) {
         return new Default<>(closure);
     }
 
-    public static <T, R> Case<T, R> classCase(Class<? extends T> type, Function<? super T, R> closure) {
+    public static <T, R> Case<T, R> typeCase(Class<? extends T> type, Function<? super T, R> closure) {
         return new Type<>(type, closure);
     }
 
