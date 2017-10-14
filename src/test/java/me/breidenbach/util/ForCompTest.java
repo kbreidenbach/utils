@@ -3,6 +3,7 @@ package me.breidenbach.util;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,8 +21,7 @@ class ForCompTest {
     @Test
     void simple() {
         final List<Integer> numbers = List.of(1, 2);
-        final Stream result = ForComp.with(forFunction(i -> i.get(0)), numbers).
-                yield();
+        final Stream result = ForComp.with(forFunction(i -> i.get(0)), numbers).yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(numbers)));
     }
@@ -30,8 +30,8 @@ class ForCompTest {
     void simpleWithIff() {
         final List<Integer> numbers = List.of(1, 2, 3, 4);
         final List<Integer> expected = List.of(2, 4);
-        final Stream result = ForComp.with(forFunction(i -> i.get(0)), numbers).<Integer>iff(i -> i % 2 == 0).
-                yield();
+        final Predicate<Integer> predicate = i -> i % 2 == 0;
+        final Stream result = ForComp.with(forFunction(i -> i.get(0)), numbers).iff(predicate).yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
     }
