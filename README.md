@@ -1,6 +1,6 @@
 # utils
 
-Some utilities to make Java 9 even more expressive
+Some utilities to make Java 9 even more expressive. This will be updated with code examples in the near future
 
 #### Try
 Try is a java version of the Scala type.
