@@ -69,7 +69,7 @@ public class Try<T> {
     }
 
     public <U> Try<U> map(Function<T, U> function) {
-        return failure == null ? new Try<>(() -> function.apply(payload)) : new Try<>(failure);
+        return failure == null ? run(() -> function.apply(payload)) : new Failure<>(failure);
     }
 
     public <U> U fold(Function<Throwable, U> failureHandler, Function<T, U> successHandler) {
