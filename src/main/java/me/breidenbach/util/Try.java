@@ -15,9 +15,9 @@ public class Try<T> {
     private T payload;
     private Throwable failure;
 
-    Try(TrySupplier<? extends T> supplier) {
+    public Try(TryRunnable<? extends T> supplier) {
         try {
-            this.payload = supplier.supply();
+            this.payload = supplier.run();
         } catch (Throwable throwable) {
             failure = throwable;
         }
@@ -90,7 +90,7 @@ public class Try<T> {
     }
 
     @FunctionalInterface
-    public interface TrySupplier<T> {
-        T supply() throws Throwable;
+    public interface TryRunnable<T> {
+        T run() throws Throwable;
     }
 }

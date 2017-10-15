@@ -188,7 +188,7 @@ class TryTest {
         assertThat(result, is(equalTo(0)));
     }
 
-    private class TestType implements Try.TrySupplier<String> {
+    private class TestType implements Try.TryRunnable<String> {
         private final boolean fail;
 
         private TestType(boolean fail) {
@@ -196,7 +196,7 @@ class TryTest {
         }
 
         @Override
-        public String supply() throws Throwable {
+        public String run() throws Throwable {
             if (fail) throw ERROR;
             return TEST;
         }
