@@ -3,8 +3,10 @@ package me.breidenbach.util;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.function.IntSupplier;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static me.breidenbach.util.ForComp.forComp;
@@ -22,7 +24,7 @@ class ForCompTest {
     @Test
     void simple() {
         final List<Integer> numbers = List.of(1, 2);
-        final Stream result = forComp(forFunction(i -> i.get(0)), numbers).yield();
+        final Stream result = forComp(numbers, forFunction(i -> i.get(0))).yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(numbers)));
     }
@@ -32,7 +34,7 @@ class ForCompTest {
         final List<Integer> numbers = List.of(1, 2, 3, 4);
         final List<Integer> expected = List.of(2, 4);
         final Predicate<Integer> predicate = i -> i % 2 == 0;
-        final Stream result = forComp(forFunction(i -> i.get(0)), numbers).iff(predicate).yield();
+        final Stream result = forComp(numbers, forFunction(i -> i.get(0))).iff(predicate).yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
     }
@@ -47,8 +49,8 @@ class ForCompTest {
                 List.of(2, 20),
                 List.of(2, 40));
 
-        final Stream result = forComp(forFunction(i -> i.get(0)), outer).
-                with(forFunction(j -> j.get(0)), inner).
+        final Stream result = forComp(outer, forFunction(i -> i.get(0))).
+                with(inner, forFunction(j -> j.get(0))).
                 yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
@@ -61,7 +63,20 @@ class ForCompTest {
         final List<Integer> expected = List.of(21, 41, 22, 42);
 
         final Stream result = forComp(outer).
-                with(forFunction(j -> j.get(0) + j.get(1), 0), inner).
+                with(inner, forFunction(j -> j.get(0) + j.get(1), 0)).
+                yield();
+
+        assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
+    }
+
+    @Test
+    void nestedStreamWithSum() {
+        final Stream<Integer> outer = IntStream.generate(new IntegerSupplier(1, 1)).limit(2).boxed();
+        final Stream<Integer> inner = IntStream.generate(new IntegerSupplier(20, 20)).limit(2).boxed();
+        final List<Integer> expected = List.of(21, 41, 22, 42);
+
+        final Stream result = forComp(outer).
+                with(inner, forFunction(j -> j.get(0) + j.get(1), 0)).
                 yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
@@ -74,7 +89,7 @@ class ForCompTest {
         final List<String> expected = List.of("Hello Dave", "Hello John", "Goodbye Dave", "Goodbye John");
 
         final Stream result = forComp(outer).
-                with(forFunction(j -> j.get(1) + " " + j.get(0), 0), inner).
+                with(inner, forFunction(j -> j.get(1) + " " + j.get(0), 0)).
                 yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
@@ -87,7 +102,7 @@ class ForCompTest {
         final List<String> expected = List.of("HELLO DAVE", "HELLO JOHN", "GOODBYE DAVE", "GOODBYE JOHN");
 
         final Stream result = forComp(outer).
-                with(forFunction(j -> j.get(1) + " " + j.get(0), 0), inner).
+                with(inner, forFunction(j -> j.get(1) + " " + j.get(0), 0)).
                 yield(s -> ((String)s).toUpperCase());
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
@@ -100,7 +115,7 @@ class ForCompTest {
         final List<String> expected = List.of("HELLO DAVE", "HELLO JOHN");
 
         final Stream result = forComp(outer).<String>iff(str -> str.equals("Hello")).
-                with(forFunction(j -> j.get(1) + " " + j.get(0), 0), inner).
+                with(inner, forFunction(j -> j.get(1) + " " + j.get(0), 0)).
                 yield(s -> ((String)s).toUpperCase());
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
@@ -112,10 +127,26 @@ class ForCompTest {
         final List<Integer> expected = List.of(4);
 
         final Stream result = forComp(test).
-                with(forFunction(i -> i.get(0) + i.get(1), 0), List.of(2)).
+                with(List.of(2), forFunction(i -> i.get(0) + i.get(1), 0)).
                 yield();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
+    }
+
+    private class IntegerSupplier implements IntSupplier {
+        private final int step;
+        private int current;
+        private IntegerSupplier(int start, int step) {
+            this.current = start;
+            this.step = step;
+        }
+
+        @Override
+        public int getAsInt() {
+            final int result = current;
+            current += step;
+            return result;
+        }
     }
 
 }

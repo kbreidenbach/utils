@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -18,22 +19,36 @@ public class ForComp {
         return new ForFunction<>(function, indexes);
     }
 
-    public static <T> ForComprehension forComp(ForFunction<T, ?> function, List<T> nextIterable) {
-        return new ForComprehension().with(function, nextIterable);
+    public static <T> ForComprehension forComp(List<T> nextIterable, ForFunction<T, ?> function) {
+        return new ForComprehension().with(nextIterable, function);
     }
 
     public static <T> ForComprehension forComp(List<T> nextIterable) {
         return new ForComprehension().with(nextIterable);
     }
 
-    @SafeVarargs
-    public static <T> ForComprehension forComp(T... nextItems) {
+    public static <T> ForComprehension forComp(Stream<T> stream, ForFunction<T, ?> function) {
+        return new ForComprehension().with(stream, function);
+    }
+
+    public static <T> ForComprehension forComp(Stream<T> stream) {
+        return new ForComprehension().with(stream);
+    }
+
+    public static <T> ForComprehension forComp(T[] nextItems) {
         return new ForComprehension().with(nextItems);
     }
 
-    @SafeVarargs
-    public static <T> ForComprehension forComp(ForFunction<T, ?> function, T... nextItems) {
-        return new ForComprehension().with(function, nextItems);
+    public static <T> ForComprehension forComp(T[] nextItems, ForFunction<T, ?> function) {
+        return new ForComprehension().with(nextItems, function);
+    }
+
+    public static <T> ForComprehension forComp(Try<T> nextItem) {
+        return new ForComprehension().with(nextItem);
+    }
+
+    public static <T> ForComprehension forComp(Try<T> nextItem, ForFunction<Try<T>, ?> function) {
+        return new ForComprehension().with(nextItem, function);
     }
 
     public static class ForFunction<T, R> {
@@ -62,24 +77,38 @@ public class ForComp {
         private ForComprehension() {
         }
 
-        public <T> ForComprehension with(ForFunction<T, ?> function, List<T> nextIterable) {
+        public <T> ForComprehension with(List<T> nextIterable, ForFunction<T, ?> function) {
             functions.add(function);
             iterables.add(nextIterable);
             return this;
         }
 
         public <T> ForComprehension with(List<T> nextIterable) {
-            return with(null, nextIterable);
+            return with(nextIterable, null);
         }
 
-        @SafeVarargs
-        public final <T> ForComprehension with(T... nextItems) {
-            return with(null, List.of(nextItems));
+        public <T> ForComprehension with(Stream<T> stream, ForFunction<T, ?> function) {
+            return with(stream.collect(Collectors.toList()), function);
         }
 
-        @SafeVarargs
-        public final <T> ForComprehension with(ForFunction<T, ?> function, T... nextItems) {
-            return with(function, List.of(nextItems));
+        public <T> ForComprehension with(Stream<T> stream) {
+            return with(stream.collect(Collectors.toList()), null);
+        }
+
+        public final <T> ForComprehension with(T[] nextItems) {
+            return with(List.of(nextItems), null);
+        }
+
+        public final <T> ForComprehension with(T[] nextItems, ForFunction<T, ?> function) {
+            return with(List.of(nextItems), function);
+        }
+
+        public final <T> ForComprehension with(Try<T> nextItems) {
+            return with(List.of(nextItems), null);
+        }
+
+        public final <T> ForComprehension with(Try<T> nextItems, ForFunction<Try<T>, ?> function) {
+            return with(List.of(nextItems), function);
         }
 
         public <T> ForComprehension iff(Predicate<T> predicate) {

@@ -14,6 +14,32 @@ for comprehension here is still a powerful tool for Java.
 
 The test cases give some good examples of usage
 
+An example of swapping a nest loop for for comp
+
+```
+    private int nestedLoops() {
+        int result = 0;
+
+        for (int i = 0; i < 100; i ++) {
+            for(int j = 0; j < 50; j++) {
+                for(int k = 0; k < 20; k++) {
+                    result += (i + j + k);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private int nestedForComp() {
+        return forComp(IntStream.range(0, 100).boxed()).
+                with(IntStream.range(0, 50).boxed()).
+                with(IntStream.range(0, 20).boxed(), forFunction(l -> l.get(2) + l.get(1) + l.get(0), 0, 1)).
+                yield().mapToInt(value -> (Integer) value).sum();
+    }
+    
+```
+
 #### Match
 Match gives a similar pattern matching function to that of Scala's match. <code>Match.match</code> takes a subject to 
 match on and then a number of <code>Case</code> types for the patterns.
