@@ -15,7 +15,16 @@ public class Try<T> {
     private T payload;
     private Throwable failure;
 
-    public Try(TryRunnable<? extends T> supplier) {
+    public static <T> Try<T> run(TryRunnable<? extends T> supplier) {
+        try {
+            final T payload = supplier.run();
+            return new Success<>(payload);
+        } catch (Throwable throwable) {
+            return new Failure<>(throwable);
+        }
+    }
+
+    private Try(TryRunnable<? extends T> supplier) {
         try {
             this.payload = supplier.run();
         } catch (Throwable throwable) {
@@ -23,11 +32,11 @@ public class Try<T> {
         }
     }
 
-    protected Try(T payload) {
+    Try(T payload) {
         this.payload = payload;
     }
 
-    protected Try(Throwable failure) {
+    Try(Throwable failure) {
         this.failure = failure;
     }
 

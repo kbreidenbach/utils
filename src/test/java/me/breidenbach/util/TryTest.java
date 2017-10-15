@@ -61,7 +61,7 @@ class TryTest {
     @Test
     void thenSuccess() {
         final TestType testType = new TestType(false);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
 
         testTry.then(failureTester, successTester);
 
@@ -74,7 +74,7 @@ class TryTest {
     @Test
     void thenFailure() {
         final TestType testType = new TestType(true);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
 
         testTry.then(failureTester, successTester);
 
@@ -87,7 +87,7 @@ class TryTest {
     @Test
     void streamSuccess() {
         final TestType testType = new TestType(false);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
 
         testTry.stream().forEach(successTester);
 
@@ -97,7 +97,7 @@ class TryTest {
     @Test
     void streamFailure() {
         final TestType testType = new TestType(true);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
 
         testTry.stream().forEach(successTester);
 
@@ -107,7 +107,7 @@ class TryTest {
     @Test
     void forEachSuccess() {
         final TestType testType = new TestType(false);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
 
         testTry.forEach(successTester);
 
@@ -117,7 +117,7 @@ class TryTest {
     @Test
     void forEachFailure() {
         final TestType testType = new TestType(true);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
 
         testTry.forEach(successTester);
 
@@ -127,7 +127,7 @@ class TryTest {
     @Test
     void mapSuccess() {
         final TestType testType = new TestType(false);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
         final Try<Integer> result = testTry.map(String::length);
 
         assertThat(result.isSuccess(), is(true));
@@ -140,7 +140,7 @@ class TryTest {
     @Test
     void mapFailure() {
         final TestType testType = new TestType(true);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
         final Try<Integer> result = testTry.map(String::length);
 
         assertThat(result.isSuccess(), is(false));
@@ -153,7 +153,7 @@ class TryTest {
     @Test
     void getOrElseSuccess() {
         final TestType testType = new TestType(false);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
         final String defaultValue = "DEFAULT";
 
         assertThat(testTry.getOrElse(defaultValue).isPresent(), is(true));
@@ -163,7 +163,7 @@ class TryTest {
     @Test
     void getOrElseFailure() {
         final TestType testType = new TestType(true);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
         final String defaultValue = "DEFAULT";
 
         assertThat(testTry.getOrElse(defaultValue).isPresent(), is(true));
@@ -173,7 +173,7 @@ class TryTest {
     @Test
     void foldSuccess() {
         final TestType testType = new TestType(false);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
         final int result = testTry.fold(t -> 0, s-> 1);
 
         assertThat(result, is(equalTo(1)));
@@ -182,7 +182,7 @@ class TryTest {
     @Test
     void foldFailure() {
         final TestType testType = new TestType(true);
-        final Try<String> testTry = new Try<>(testType);
+        final Try<String> testTry = Try.run(testType);
         final int result = testTry.fold(t -> 0, s-> 1);
 
         assertThat(result, is(equalTo(0)));
