@@ -123,7 +123,7 @@ class ForCompTest {
 
     @Test
     void simpleTry() {
-        final Try<Integer> test = Try.run(() -> 2);
+        final Try<Integer> test = Try.tryRun(() -> 2);
         final List<Integer> expected = List.of(4);
 
         final Stream result = forComp(test).

@@ -45,11 +45,11 @@ public class TryExample {
      * in the Try. However, if you know your object can't be null then method
      */
     private Try<Connection> getConnection() {
-        return Try.run(() -> dataSource.getConnection());
+        return Try.tryRun(() -> dataSource.getConnection());
     }
 
     private Try<PreparedStatement> prepareStatement(Connection connection, String sql) {
-        return Try.run(() -> connection.prepareStatement(sql));
+        return Try.tryRun(() -> connection.prepareStatement(sql));
     }
 
     private Try<String> successString() {
@@ -67,13 +67,13 @@ public class TryExample {
         // Don't care about failure example
         example.getConnection().onSuccess(
                 connection -> example.prepareStatement(connection, sql).onSuccess(
-                        statement -> Try.run(statement::execute)));
+                        statement -> Try.tryRun(statement::execute)));
 
         // Do something about failure
         example.getConnection().
                 then(TryExample::logError, connection -> example.prepareStatement(connection, sql).
                         then(TryExample::logError,
-                                statement -> Try.run(statement::execute).onFailure(TryExample::logError)));
+                                statement -> Try.tryRun(statement::execute).onFailure(TryExample::logError)));
 
         if (!example.successString().fold(error -> false, string -> true)) throw new RuntimeException("Should be success");
         if (example.failureString().fold(error -> false, string -> true)) throw new RuntimeException("Should have failed");

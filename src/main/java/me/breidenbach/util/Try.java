@@ -15,7 +15,7 @@ public class Try<T> {
     private T payload;
     private Throwable failure;
 
-    public static <T> Try<T> run(TryRunnable<? extends T> supplier) {
+    public static <T> Try<T> tryRun(TryRunnable<? extends T> supplier) {
         try {
             final T payload = supplier.run();
             return new Success<>(payload);
@@ -69,7 +69,7 @@ public class Try<T> {
     }
 
     public <U> Try<U> map(Function<T, U> function) {
-        return failure == null ? run(() -> function.apply(payload)) : new Failure<>(failure);
+        return failure == null ? tryRun(() -> function.apply(payload)) : new Failure<>(failure);
     }
 
     public <U> U fold(Function<Throwable, U> failureHandler, Function<T, U> successHandler) {
