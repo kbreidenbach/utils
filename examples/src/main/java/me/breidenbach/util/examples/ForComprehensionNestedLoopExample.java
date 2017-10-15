@@ -37,6 +37,6 @@ public class ForComprehensionNestedLoopExample {
         final int forLoop = example.nestedLoops();
         final int forComp = example.nestedForComp();
 
-        assert(forComp == forLoop);
+        if (forComp != forLoop) throw new RuntimeException("Should be equal");
     }
 }

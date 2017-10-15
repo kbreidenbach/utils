@@ -52,7 +52,7 @@ public class Match {
         }
     }
 
-    public static class MatchException extends Exception {
+    public static class MatchException extends RuntimeException {
         private MatchException(String message) {
             super(message);
         }

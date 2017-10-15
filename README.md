@@ -54,3 +54,39 @@ There are three helper methods in the <code>Match</code> class to help create <c
 <code>defaultCase</code> only takes a function and is used as a fall through match
 
 Also like Scala's match, order is important and the match function will complete on the first pattern matched 
+
+Some contrived examples:
+```
+        final MatchExample example = new MatchExample();
+        final Try<String> tryOne = example.successString();
+        final Try<String> tryTwo = example.failureString();
+
+        boolean worked = match(tryOne,
+                typeCase(Success.class, o -> true),
+                typeCase(Failure.class, o -> false));
+
+        if (!worked) throw new RuntimeException("Should have worked");
+
+        worked = match(tryTwo,
+                typeCase(Success.class, o -> true),
+                typeCase(Failure.class, o -> false));
+
+        if (worked) throw new RuntimeException("Shouldn't have worked");
+
+
+        final int i = 28;
+
+        final int result = match(i,
+                matchCase(e -> e + 1 == 30, e -> 30),
+                matchCase(e -> e / 4 == 7, e -> 7));
+
+        if (result != 7) throw new RuntimeException("Should've been 7");
+
+        final Double pi = 3.1415927;
+
+        final String answer = match(pi,
+                typeCase(Integer.class, j -> "Not today"),
+                matchCase(j -> (Double)j == 3.1415927, j-> "Eureka!"));
+
+        if (!answer.equals("Eureka!")) throw new RuntimeException("Sunk");
+```

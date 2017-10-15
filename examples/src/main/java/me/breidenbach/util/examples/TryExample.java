@@ -75,8 +75,8 @@ public class TryExample {
                         then(TryExample::logError,
                                 statement -> Try.run(statement::execute).onFailure(TryExample::logError)));
 
-        assert(example.successString().fold(error -> false, string -> true));
-        assert(!example.failureString().fold(error -> false, string -> true));
+        if (!example.successString().fold(error -> false, string -> true)) throw new RuntimeException("Should be success");
+        if (example.failureString().fold(error -> false, string -> true)) throw new RuntimeException("Should have failed");
     }
 
     private static void logError(Throwable throwable) {
