@@ -34,7 +34,7 @@ An example of swapping a nest loop for for comp
     private int nestedForComp() {
         return forComp(IntStream.range(0, 100).boxed()).
                 with(IntStream.range(0, 50).boxed()).
-                with(IntStream.range(0, 20).boxed(), forFunction(l -> l.get(2) + l.get(1) + l.get(0), 0, 1)).
+                with(IntStream.range(0, 20).boxed(), forFunction(l -> l.get(0) + l.get(1) + l.get(2))).
                 yield().mapToInt(value -> (Integer) value).sum();
     }
     

@@ -15,8 +15,8 @@ import java.util.stream.Stream;
 @SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
 public class ForComp {
 
-    public static <T, R> ForFunction<T, R> forFunction(NFunction<T, R> function, int...indexes) {
-        return new ForFunction<>(function, indexes);
+    public static <T, R> ForFunction<T, R> forFunction(NFunction<T, R> function) {
+        return new ForFunction<>(function);
     }
 
     public static <T> ForComprehension forComp(List<T> nextIterable, ForFunction<T, ?> function) {
@@ -53,19 +53,12 @@ public class ForComp {
 
     public static class ForFunction<T, R> {
         private final NFunction<T, R> function;
-        private final int[] indexes;
 
-        private ForFunction(NFunction<T, R> function, int[] indexes) {
+        private ForFunction(NFunction<T, R> function) {
             this.function = function;
-            this.indexes = indexes;
-        }
-
-        private int[] getIndexes() {
-            return indexes;
         }
 
         private R apply(List<T> data) {
-            if (data.size() - 1 != indexes.length) throw new IllegalArgumentException("incorrect number of data points");
             return function.apply(data);
         }
     }
@@ -202,12 +195,10 @@ public class ForComp {
 
         private void processItem(List row, int index, Object item, ForFunction forFunction) {
             if (forFunction != null) {
-                final int[] indexes = forFunction.indexes;
-                final List dataPoints = new ArrayList<>(1 + indexes.length);
+                final List dataPoints = new ArrayList<>(1 + row.size());
 
+                dataPoints.addAll(row.subList(0, index));
                 dataPoints.add(item);
-
-                for (int i : indexes) dataPoints.add(row.get(i));
 
                 row.set(index, forFunction.apply(dataPoints));
             } else {
