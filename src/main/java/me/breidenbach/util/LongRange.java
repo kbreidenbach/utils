@@ -8,8 +8,20 @@ import java.util.stream.Stream;
  * @author Kevin E. Breidenbach
  * Date: 10/15/17
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class LongRange extends BaseNumberRange<Long> {
+
+    public static Stream<Long> longStream(long start, long end) {
+        return new LongRange(start, end).stream();
+    }
+
+    public static Stream<Long> intStream(long start, long end, long step) {
+        return new LongRange(start, end, step).stream();
+    }
+
+    public LongRange(long start, long end) {
+        this(start, end, 1);
+    }
 
     public LongRange(long start, long end, long step) {
         super(start, end, step, step > 0);

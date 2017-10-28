@@ -117,6 +117,18 @@ public class ForComp {
             return this;
         }
 
+        public <R> Stream<R> yieldFlat() {
+            return yield().flatMap(l -> ((List<R>)l).stream());
+        }
+
+        public <R> Stream<R> yieldFlat(Function<List<?>, R> function) {
+            return yield(function).flatMap(l -> ((List<R>)l).stream());
+        }
+
+        public <R> Stream<R> yield() {
+            return yield((l) -> (R)l);
+        }
+
         public <R> Stream<R> yield(Function<List<?>, R> function) {
             switch (iterables.size()) {
                 case 0 : return Stream.empty();

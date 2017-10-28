@@ -1,8 +1,7 @@
 package me.breidenbach.util.examples;
 
-import java.util.stream.IntStream;
-
-import static me.breidenbach.util.ForComp.*;
+import static me.breidenbach.util.ForComp.forComp;
+import static me.breidenbach.util.IntRange.intStream;
 
 /**
  * @author Kevin E. Breidenbach
@@ -25,10 +24,11 @@ public class ForComprehensionNestedLoopExample {
     }
 
     private int nestedForComp() {
-        return forComp(IntStream.range(0, 100).boxed()).
-                with(IntStream.range(0, 50).boxed()).
-                with(IntStream.range(0, 20).boxed(), forFunction(l -> l.get(0) + l.get(1) + l.get(2))).
-                yield().mapToInt(value -> (Integer) value).sum();
+         return forComp(intStream(0, 99)).
+                with(intStream(0, 49)).
+                with(intStream(0, 19)).
+                yieldFlat().mapToInt(i -> (Integer)i).sum();
+
     }
 
     public static void main(String[] args) {

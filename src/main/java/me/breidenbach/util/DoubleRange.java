@@ -8,8 +8,12 @@ import java.util.stream.Stream;
  * @author Kevin E. Breidenbach
  * Date: 10/17/17
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class DoubleRange extends BaseNumberRange<Double> {
+
+    public static Stream<Double> doubleStream(double start, double end, double step) {
+        return new DoubleRange(start, end, step).stream();
+    }
 
     public DoubleRange(double start, double end, double step) {
         super(start, end, step, step > 0);
