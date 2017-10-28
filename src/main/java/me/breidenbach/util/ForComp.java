@@ -106,10 +106,10 @@ public class ForComp {
 
         public ForComprehension<T> iff(final Predicate<T> predicate) {
             final int index = iterables.size() - 1;
-            final List list = iterables.get(index);
-            final List newList = new ArrayList(list.size());
+            final List<T> list = iterables.get(index);
+            final List<T> newList = new ArrayList(list.size());
             list.forEach(item -> {
-                if (predicate.test((T)item)) {
+                if (predicate.test(item)) {
                     newList.add(item);
                 }
             });
