@@ -12,27 +12,27 @@ import java.util.stream.Stream;
 @SuppressWarnings("WeakerAccess")
 public class BigIntegerRange extends BaseNumberRange<BigInteger> {
 
-    public BigIntegerRange(BigInteger start, BigInteger end, BigInteger step) {
+    public BigIntegerRange(final BigInteger start, final BigInteger end, final BigInteger step) {
         super(start, end, step, step.signum() == 1);
     }
 
     @Override
-    BigInteger nextValue(BigInteger current, BigInteger step) {
+    BigInteger nextValue(final BigInteger current, final BigInteger step) {
         return current.add(step);
     }
 
     @Override
-    boolean lessThanEqualTo(BigInteger left, BigInteger right) {
+    boolean lessThanEqualTo(final BigInteger left, final BigInteger right) {
         return left.compareTo(right) <= 0;
     }
 
     @Override
-    boolean greaterThanEqualTo(BigInteger left, BigInteger right) {
+    boolean greaterThanEqualTo(final BigInteger left, final BigInteger right) {
         return left.compareTo(right) >= 0;
     }
 
     @Override
-    int countRemaining(BigInteger current, BigInteger end, BigInteger step) {
+    int countRemaining(final BigInteger current, final BigInteger end, final BigInteger step) {
         return ((end.subtract(current)).divide(step)).add(BigInteger.ONE).intValue();
     }
 

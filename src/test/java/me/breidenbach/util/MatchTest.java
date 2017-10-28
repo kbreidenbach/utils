@@ -91,7 +91,7 @@ class MatchTest {
         Assertions.assertThrows(MatchException.class, () -> matchMessage(new Message() { }));
     }
 
-    private void matchMessage(Message message) throws MatchException {
+    private void matchMessage(final Message message) throws MatchException {
         // unfortunately we can't get away from the need to return null on a Java Void type :-(
         match(message,
                 typeCase(MessageOne.class, m -> { methodOne(); return null; }),
@@ -116,14 +116,14 @@ class MatchTest {
     }
 
     private static class MessageOne implements Message {
-        private static int methodNumber = 1;
+        private static final int methodNumber = 1;
     }
 
     private static class MessageTwo implements Message {
-        private static int methodNumber = 2;
+        private static final int methodNumber = 2;
     }
 
     private static class MessageThree implements Message {
-        private static int methodNumber = 3;
+        private static final int methodNumber = 3;
     }
 }

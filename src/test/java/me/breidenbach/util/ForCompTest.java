@@ -184,7 +184,7 @@ class ForCompTest {
     private class IntegerSupplier implements IntSupplier {
         private final int step;
         private int current;
-        private IntegerSupplier(int start, int step) {
+        private IntegerSupplier(final int start, final int step) {
             this.current = start;
             this.step = step;
         }

@@ -1,7 +1,6 @@
 package me.breidenbach.util.examples;
 
 import me.breidenbach.util.Failure;
-import me.breidenbach.util.Match;
 import me.breidenbach.util.Success;
 import me.breidenbach.util.Try;
 
@@ -13,7 +12,7 @@ import static me.breidenbach.util.Match.typeCase;
  * @author Kevin E. Breidenbach
  * Date: 10/15/17
  */
-public class MatchExample {
+class MatchExample {
 
     private Try<String> successString() {
         return new Success<>("Yup!");
@@ -23,7 +22,7 @@ public class MatchExample {
         return new Failure<>(new Exception("Nope!"));
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         final MatchExample example = new MatchExample();
         final Try<String> tryOne = example.successString();
         final Try<String> tryTwo = example.failureString();

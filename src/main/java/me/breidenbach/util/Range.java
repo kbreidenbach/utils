@@ -11,11 +11,11 @@ import java.util.stream.Stream;
  */
 public interface Range<E> extends Iterable<E>, Iterator<E> {
 
-    static Range<Integer> range(int start, int end, int step) {
+    static Range<Integer> range(final int start, final int end, final int step) {
         return new IntRange(start, end, step);
     }
 
-    static Range<Long> range(long start, long end, long step) {
+    static Range<Long> range(final long start, final long end, final long step) {
         return new LongRange(start, end, step);
     }
 

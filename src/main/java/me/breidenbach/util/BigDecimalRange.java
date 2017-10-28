@@ -13,31 +13,31 @@ import java.util.stream.Stream;
 @SuppressWarnings("WeakerAccess")
 public class BigDecimalRange extends BaseNumberRange<BigDecimal> {
 
-    public BigDecimalRange(double start, double end, double step) {
+    public BigDecimalRange(final double start, final double end, final double step) {
         this(BigDecimal.valueOf(start), BigDecimal.valueOf(end), BigDecimal.valueOf(step));
     }
 
-    public BigDecimalRange(BigDecimal start, BigDecimal end, BigDecimal step) {
+    public BigDecimalRange(final BigDecimal start, final BigDecimal end, final BigDecimal step) {
         super(start, end, step, step.signum() == 1);
     }
 
     @Override
-    BigDecimal nextValue(BigDecimal current, BigDecimal step) {
+    BigDecimal nextValue(final BigDecimal current, final BigDecimal step) {
         return current.add(step);
     }
 
     @Override
-    boolean lessThanEqualTo(BigDecimal left, BigDecimal right) {
+    boolean lessThanEqualTo(final BigDecimal left, final BigDecimal right) {
         return left.compareTo(right) <= 0;
     }
 
     @Override
-    boolean greaterThanEqualTo(BigDecimal left, BigDecimal right) {
+    boolean greaterThanEqualTo(final BigDecimal left, final BigDecimal right) {
         return left.compareTo(right) >= 0;
     }
 
     @Override
-    int countRemaining(BigDecimal current, BigDecimal end, BigDecimal step) {
+    int countRemaining(final BigDecimal current, final BigDecimal end, final BigDecimal step) {
         return ((end.subtract(current)).divide(step, RoundingMode.FLOOR)).add(BigDecimal.ONE).intValue();
     }
 

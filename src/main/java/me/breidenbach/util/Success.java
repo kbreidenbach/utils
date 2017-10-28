@@ -6,7 +6,7 @@ package me.breidenbach.util;
  */
 @SuppressWarnings("WeakerAccess")
 public class Success<T> extends Try<T> {
-    public Success(T payload) {
+    public Success(final T payload) {
         super(payload);
     }
 }

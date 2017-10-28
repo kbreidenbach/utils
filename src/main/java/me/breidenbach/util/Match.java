@@ -10,34 +10,34 @@ import java.util.function.Predicate;
 @SuppressWarnings("WeakerAccess")
 public class Match {
     @SafeVarargs
-    public static <T, R> R match(T subject, Case<T, R>...cases) throws MatchException {
-        for(Case<T, R> c : cases) {
+    public static <T, R> R match(final T subject, final Case<T, R>...cases) throws MatchException {
+        for(final Case<T, R> c : cases) {
             if (c.predicate.test(subject)) return c.closure.apply(subject);
         }
 
         throw new MatchException(String.format("MatchError %s (of class %s)", subject, subject.getClass().getName()));
     }
 
-    public static <T, R> Case<T, R> matchCase(Predicate<T> predicate, Function<? super T, R> closure) {
+    public static <T, R> Case<T, R> matchCase(final Predicate<T> predicate, final Function<? super T, R> closure) {
         return new Case<>(predicate, closure);
     }
 
-    public static <T, R> Case<T, R> defaultCase(Function<? super T, R> closure) {
+    public static <T, R> Case<T, R> defaultCase(final Function<? super T, R> closure) {
         return new Default<>(closure);
     }
 
-    public static <T, R> Case<T, R> typeCase(Class<? extends T> type, Function<? super T, R> closure) {
+    public static <T, R> Case<T, R> typeCase(final Class<? extends T> type, final Function<? super T, R> closure) {
         return new Type<>(type, closure);
     }
 
     public static class Default<T, R> extends Case<T, R> {
-        public Default(Function<? super T, R> closure) {
+        public Default(final Function<? super T, R> closure) {
             super(x -> true, closure);
         }
     }
 
     public static class Type<T, R> extends Case<T, R> {
-        public Type(Class<? extends T> type, Function<? super T, R> closure) {
+        public Type(final Class<? extends T> type, final Function<? super T, R> closure) {
             super(type::isInstance, closure);
         }
     }
@@ -46,14 +46,14 @@ public class Match {
         private final Predicate<T> predicate;
         private final Function<? super T, R> closure;
 
-        public Case(Predicate<T> predicate, Function<? super T, R> closure) {
+        public Case(final Predicate<T> predicate, final Function<? super T, R> closure) {
             this.predicate = predicate;
             this.closure = closure;
         }
     }
 
     public static class MatchException extends RuntimeException {
-        private MatchException(String message) {
+        private MatchException(final String message) {
             super(message);
         }
     }

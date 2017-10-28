@@ -191,7 +191,7 @@ class TryTest {
     private class TestType implements Try.TryRunnable<String> {
         private final boolean fail;
 
-        private TestType(boolean fail) {
+        private TestType(final boolean fail) {
             this.fail = fail;
         }
 

@@ -14,7 +14,7 @@ abstract class BaseNumberRange<E extends Number> implements Range<E> {
     private final boolean stepPositive;
     private E current;
 
-    BaseNumberRange(E start, E end, E step, boolean stepPositive) {
+    BaseNumberRange(final E start, final E end, final E step, final boolean stepPositive) {
         this.start = start;
         this.end = end;
         this.current = start;

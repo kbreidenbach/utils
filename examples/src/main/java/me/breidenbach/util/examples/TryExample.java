@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
  * @author Kevin E. Breidenbach
  * Date: 10/15/17
  */
-public class TryExample {
+class TryExample {
 
     @Mock
     private DataSource dataSource;
@@ -35,7 +35,7 @@ public class TryExample {
             when(dataSource.getConnection()).thenReturn(connection);
             when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
             when(preparedStatement.execute()).thenThrow(new SQLException("Thrown just for this example!"));
-        } catch (SQLException ignored) {
+        } catch (final SQLException ignored) {
         }
     }
 
@@ -48,7 +48,7 @@ public class TryExample {
         return Try.tryRun(() -> dataSource.getConnection());
     }
 
-    private Try<PreparedStatement> prepareStatement(Connection connection, String sql) {
+    private Try<PreparedStatement> prepareStatement(final Connection connection, final String sql) {
         return Try.tryRun(() -> connection.prepareStatement(sql));
     }
 
@@ -60,7 +60,7 @@ public class TryExample {
         return new Failure<>(new Exception("Nope!"));
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         final String sql = "SELECT * FROM MY_TABLE";
         final TryExample example = new TryExample();
 
@@ -79,7 +79,7 @@ public class TryExample {
         if (example.failureString().fold(error -> false, string -> true)) throw new RuntimeException("Should have failed");
     }
 
-    private static void logError(Throwable throwable) {
+    private static void logError(final Throwable throwable) {
         System.out.println(throwable.getMessage());
     }
 }

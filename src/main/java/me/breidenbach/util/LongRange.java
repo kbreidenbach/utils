@@ -11,39 +11,39 @@ import java.util.stream.Stream;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class LongRange extends BaseNumberRange<Long> {
 
-    public static Stream<Long> longStream(long start, long end) {
+    public static Stream<Long> longStream(final long start, final long end) {
         return new LongRange(start, end).stream();
     }
 
-    public static Stream<Long> intStream(long start, long end, long step) {
+    public static Stream<Long> intStream(final long start, final long end, final long step) {
         return new LongRange(start, end, step).stream();
     }
 
-    public LongRange(long start, long end) {
+    public LongRange(final long start, final long end) {
         this(start, end, 1);
     }
 
-    public LongRange(long start, long end, long step) {
+    public LongRange(final long start, final long end, final long step) {
         super(start, end, step, step > 0);
     }
 
     @Override
-    Long nextValue(Long current, Long step) {
+    Long nextValue(final Long current, final Long step) {
         return current + step;
     }
 
     @Override
-    boolean lessThanEqualTo(Long left, Long right) {
+    boolean lessThanEqualTo(final Long left, final Long right) {
         return left <= right;
     }
 
     @Override
-    boolean greaterThanEqualTo(Long left, Long right) {
+    boolean greaterThanEqualTo(final Long left, final Long right) {
         return left >= right;
     }
 
     @Override
-    int countRemaining(Long current, Long end, Long step) {
+    int countRemaining(final Long current, final Long end, final Long step) {
         return (int)((end - current) / step) + 1;
     }
 

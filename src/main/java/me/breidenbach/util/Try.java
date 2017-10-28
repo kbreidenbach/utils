@@ -15,32 +15,32 @@ public class Try<T> {
     private T payload;
     private Throwable failure;
 
-    public static <T> Try<T> tryRun(TryRunnable<? extends T> supplier) {
+    public static <T> Try<T> tryRun(final TryRunnable<? extends T> supplier) {
         try {
             final T payload = supplier.run();
             return new Success<>(payload);
-        } catch (Throwable throwable) {
+        } catch (final Throwable throwable) {
             return new Failure<>(throwable);
         }
     }
 
-    private Try(TryRunnable<? extends T> supplier) {
+    private Try(final TryRunnable<? extends T> supplier) {
         try {
             this.payload = supplier.run();
-        } catch (Throwable throwable) {
+        } catch (final Throwable throwable) {
             failure = throwable;
         }
     }
 
-    Try(T payload) {
+    Try(final T payload) {
         this.payload = payload;
     }
 
-    Try(Throwable failure) {
+    Try(final Throwable failure) {
         this.failure = failure;
     }
 
-    public Try<T> onSuccess(Consumer<? super T> successHandler) {
+    public Try<T> onSuccess(final Consumer<? super T> successHandler) {
         if (failure == null) {
             successHandler.accept(payload);
         }
@@ -48,7 +48,7 @@ public class Try<T> {
         return this;
     }
 
-    public Try<T> onFailure(Consumer<Throwable> failureHandler) {
+    public Try<T> onFailure(final Consumer<Throwable> failureHandler) {
         if (failure != null) {
             failureHandler.accept(failure);
         }
@@ -64,19 +64,19 @@ public class Try<T> {
         return Optional.ofNullable(failure);
     }
 
-    public Optional<T> getOrElse(T defaultValue) {
+    public Optional<T> getOrElse(final T defaultValue) {
         return failure == null ? Optional.ofNullable(payload) : Optional.ofNullable(defaultValue);
     }
 
-    public <U> Try<U> map(Function<T, U> function) {
+    public <U> Try<U> map(final Function<T, U> function) {
         return failure == null ? tryRun(() -> function.apply(payload)) : new Failure<>(failure);
     }
 
-    public <U> U fold(Function<Throwable, U> failureHandler, Function<T, U> successHandler) {
+    public <U> U fold(final Function<Throwable, U> failureHandler, final Function<T, U> successHandler) {
         return failure == null ? successHandler.apply(payload) : failureHandler.apply(failure);
     }
 
-    public Try<T> then(Consumer<Throwable> failureHandler, Consumer<? super T> successHandler) {
+    public Try<T> then(final Consumer<Throwable> failureHandler, final Consumer<? super T> successHandler) {
         onSuccess(successHandler).onFailure(failureHandler);
         return this;
     }
@@ -85,7 +85,7 @@ public class Try<T> {
         return failure == null ?  Stream.of(payload) : Stream.empty();
     }
 
-    public Try<T> forEach(Consumer<? super T> successHandler) {
+    public Try<T> forEach(final Consumer<? super T> successHandler) {
         stream().forEach(successHandler);
         return this;
     }

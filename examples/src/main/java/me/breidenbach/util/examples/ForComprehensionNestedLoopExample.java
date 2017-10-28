@@ -7,7 +7,7 @@ import static me.breidenbach.util.IntRange.intStream;
  * @author Kevin E. Breidenbach
  * Date: 10/14/17
  */
-public class ForComprehensionNestedLoopExample {
+class ForComprehensionNestedLoopExample {
 
     private int nestedLoops() {
         int result = 0;
@@ -30,7 +30,7 @@ public class ForComprehensionNestedLoopExample {
                 yieldFlat().mapToInt(i -> i).sum();
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         final ForComprehensionNestedLoopExample example = new ForComprehensionNestedLoopExample();
 
         final int forLoop = example.nestedLoops();

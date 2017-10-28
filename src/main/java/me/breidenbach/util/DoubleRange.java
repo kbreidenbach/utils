@@ -11,31 +11,31 @@ import java.util.stream.Stream;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class DoubleRange extends BaseNumberRange<Double> {
 
-    public static Stream<Double> doubleStream(double start, double end, double step) {
+    public static Stream<Double> doubleStream(final double start, final double end, final double step) {
         return new DoubleRange(start, end, step).stream();
     }
 
-    public DoubleRange(double start, double end, double step) {
+    public DoubleRange(final double start, final double end, final double step) {
         super(start, end, step, step > 0);
     }
 
     @Override
-    Double nextValue(Double current, Double step) {
+    Double nextValue(final Double current, final Double step) {
         return current + step;
     }
 
     @Override
-    boolean lessThanEqualTo(Double left, Double right) {
+    boolean lessThanEqualTo(final Double left, final Double right) {
         return left <= right;
     }
 
     @Override
-    boolean greaterThanEqualTo(Double left, Double right) {
+    boolean greaterThanEqualTo(final Double left, final Double right) {
         return left >= right;
     }
 
     @Override
-    int countRemaining(Double current, Double end, Double step) {
+    int countRemaining(final Double current, final Double end, final Double step) {
         return (int)(((end - current) / step) + 1.0);
     }
 

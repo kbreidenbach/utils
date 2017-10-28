@@ -6,7 +6,7 @@ package me.breidenbach.util;
  */
 @SuppressWarnings("WeakerAccess")
 public class Failure<T> extends Try<T> {
-    public Failure(Throwable failure) {
+    public Failure(final Throwable failure) {
         super(failure);
     }
 }

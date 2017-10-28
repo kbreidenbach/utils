@@ -39,7 +39,7 @@ class RangeTest {
     void iterateLong() {
         final Range<Long> range = new LongRange(0L, 20L, 2L);
         final Long[] expected = { 0L, 2L, 4L, 6L, 8L, 10L, 12L, 14L, 16L, 18L, 20L };
-        Long[] rest = new Long[11];
+        final Long[] rest = new Long[11];
 
         int index = 0;
 
@@ -62,7 +62,7 @@ class RangeTest {
     void iterateDouble() {
         final Range<Double> range = new DoubleRange(0D, 0.2, 0.1);
         final Double[] expected = { 0D, 0.1, 0.2 };
-        Double[] rest = new Double[3];
+        final Double[] rest = new Double[3];
 
         int index = 0;
 
@@ -88,7 +88,7 @@ class RangeTest {
                 BigDecimal.valueOf(0.3), BigDecimal.valueOf(0.4), BigDecimal.valueOf(0.5), BigDecimal.valueOf(0.6),
                 BigDecimal.valueOf(0.7), BigDecimal.valueOf(0.8), BigDecimal.valueOf(0.9), BigDecimal.valueOf(1.0),
                 BigDecimal.valueOf(1.1) };
-        BigDecimal[] rest = new BigDecimal[12];
+        final BigDecimal[] rest = new BigDecimal[12];
 
         int index = 0;
 
@@ -112,7 +112,7 @@ class RangeTest {
     void iterateBigInteger() {
         final Range<BigInteger> range = new BigIntegerRange(BigInteger.ZERO, BigInteger.valueOf(6), BigInteger.TWO);
         final BigInteger[] expected = { BigInteger.ZERO, BigInteger.TWO, BigInteger.valueOf(4), BigInteger.valueOf(6) };
-        BigInteger[] rest = new BigInteger[4];
+        final BigInteger[] rest = new BigInteger[4];
 
         int index = 0;
 
@@ -157,7 +157,7 @@ class RangeTest {
         private final String[] data;
         private int index = 0;
 
-        private StringRange(String[] data) {
+        private StringRange(final String[] data) {
             this.data = data;
         }
 
