@@ -139,17 +139,10 @@ public class ForComp {
             return stream.filter(Objects::nonNull).map(this::processResult);
         }
 
-        private Object processResult(List<?> data) {
-            final List result = new ArrayList<> (data.size());
-            for (int i = 0; i < data.size(); i++) {
-                if (functions.get(i) != null) result.add(data.get(i));
-            }
-            if (result.size() == 1) {
-                return result.get(0);
-            }
-            else {
-                return result;
-            }
+        private <T> List<T> processResult(List<T> data) {
+            final List<T> result = new ArrayList<>(data.size());
+            result.addAll(data);
+            return result;
         }
 
         private List<List<?>> handleIterables() {
