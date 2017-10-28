@@ -125,6 +125,19 @@ public class ForComp {
             return yield(function).flatMap(l -> ((List<R>)l).stream());
         }
 
+        public Stream yield(int index, int...indexes) {
+            if (indexes.length == 0) {
+                return yield(l -> l.get(index));
+            } else {
+                return yield(l -> {
+                    final List<T> items = new ArrayList<>(indexes.length);
+                    items.add(l.get(index));
+                    for (final int i : indexes) items.add(l.get(i));
+                    return items;
+                });
+            }
+        }
+
         public Stream<T> yield() {
             return yield((l) -> (T)l);
         }
