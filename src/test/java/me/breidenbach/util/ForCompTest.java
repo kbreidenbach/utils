@@ -165,6 +165,22 @@ class ForCompTest {
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
     }
 
+    @Test
+    void mixedForCompWithFunction() {
+        final List numbers = List.of(1, 2, 3);
+        final List words = List.of("One", "Two", "Three");
+        final List expected = List.of("1One", "1Two", "1Three",
+                "2One", "2Two", "2Three",
+                "3One", "3Two", "3Three");
+
+        final Function<List, String> function = (l) -> String.format("%s%s", l.get(0), l.get(1));
+        final Stream<String> result = forComp(numbers).
+                with(words).
+                yield(function, 0, 1);
+
+        assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
+    }
+
     private class IntegerSupplier implements IntSupplier {
         private final int step;
         private int current;
