@@ -64,7 +64,7 @@ public class ForComp {
     }
 
     public static class ForComprehension {
-        private final List<List> iterables = new ArrayList<>();
+        private final List<List<?>> iterables = new ArrayList<>();
         private final List<ForFunction> functions = new ArrayList<>();
 
         private ForComprehension() {
@@ -135,11 +135,11 @@ public class ForComp {
             }
         }
 
-        private Stream<?> mapStream(Stream<List> stream) {
+        private Stream<?> mapStream(Stream<List<?>> stream) {
             return stream.filter(Objects::nonNull).map(this::processResult);
         }
 
-        private Object processResult(List data) {
+        private Object processResult(List<?> data) {
             final List result = new ArrayList<> (data.size());
             for (int i = 0; i < data.size(); i++) {
                 if (functions.get(i) != null) result.add(data.get(i));
@@ -152,10 +152,10 @@ public class ForComp {
             }
         }
 
-        private List<List> handleIterables() {
-            final List<Iterable> iter = new ArrayList<>();
-            final List<List> result = new ArrayList<>();
-            final List row = new ArrayList(iterables.size());
+        private List<List<?>> handleIterables() {
+            final List<Iterable<?>> iter = new ArrayList<>();
+            final List<List<?>> result = new ArrayList<>();
+            final List<?> row = new ArrayList(iterables.size());
 
             for (int i = 0; i < iterables.size(); i++) row.add(null);
 
@@ -164,7 +164,7 @@ public class ForComp {
             return result;
         }
 
-        private void handleIterables(List<List> iterables, List<List> results, List row, int index, int functionIndex) {
+        private void handleIterables(List<List<?>> iterables, List<List<?>> results, List row, int index, int functionIndex) {
             for (Object item : iterables.get(0)) {
                 final ForFunction forFunction = functions.get(functionIndex);
 
