@@ -70,7 +70,7 @@ public class ForComp {
         private ForComprehension() {
         }
 
-        public <T> ForComprehension with(List<T> nextIterable, ForFunction<T, ?> function) {
+        public <T, R> ForComprehension with(List<T> nextIterable, ForFunction<T, R> function) {
             functions.add(function);
             iterables.add(nextIterable);
             return this;
@@ -80,7 +80,7 @@ public class ForComp {
             return with(nextIterable, null);
         }
 
-        public <T> ForComprehension with(Stream<T> stream, ForFunction<T, ?> function) {
+        public <T, R> ForComprehension with(Stream<T> stream, ForFunction<T, R> function) {
             return with(stream.collect(Collectors.toList()), function);
         }
 
@@ -92,7 +92,7 @@ public class ForComp {
             return with(List.of(nextItems), null);
         }
 
-        public final <T> ForComprehension with(T[] nextItems, ForFunction<T, ?> function) {
+        public final <T, R> ForComprehension with(T[] nextItems, ForFunction<T, R> function) {
             return with(List.of(nextItems), function);
         }
 
@@ -100,7 +100,7 @@ public class ForComp {
             return with(List.of(nextItems), null);
         }
 
-        public final <T> ForComprehension with(Try<T> nextItems, ForFunction<Try<T>, ?> function) {
+        public final <T, R> ForComprehension with(Try<T> nextItems, ForFunction<Try<T>, R> function) {
             return with(List.of(nextItems), function);
         }
 
@@ -117,25 +117,17 @@ public class ForComp {
             return this;
         }
 
-        public Stream<?> yield() {
-            return yield(null);
-        }
-
-        public Stream<?> yield(Function function) {
+        public <R> Stream<R> yield(Function<List<?>, R> function) {
             switch (iterables.size()) {
                 case 0 : return Stream.empty();
                 default : {
-                    final Stream<?> stream = mapStream(handleIterables().stream());
-                    if (function != null) {
-                        return stream.map(function);
-                    } else {
-                        return stream;
-                    }
+                    final Stream<List<?>> stream = mapStream(handleIterables().stream());
+                    return stream.map(function);
                 }
             }
         }
 
-        private Stream<?> mapStream(Stream<List<?>> stream) {
+        private Stream<List<?>> mapStream(Stream<List<?>> stream) {
             return stream.filter(Objects::nonNull).map(this::processResult);
         }
 
