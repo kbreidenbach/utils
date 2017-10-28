@@ -55,7 +55,8 @@ There are three helper methods in the <code>Match</code> class to help create <c
 
 Also like Scala's match, order is important and the match function will complete on the first pattern matched 
 
-Some contrived examples:
+Some contrived examples (
+[full example](https://github.com/kbreidenbach/utils/blob/master/examples/src/main/java/me/breidenbach/util/examples/MatchExample.java) )
 ```
         final MatchExample example = new MatchExample();
         final Try<String> tryOne = example.successString();
