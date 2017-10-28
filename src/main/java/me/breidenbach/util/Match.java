@@ -18,7 +18,8 @@ public class Match {
         throw new MatchException(String.format("MatchError %s (of class %s)", subject, subject.getClass().getName()));
     }
 
-    public static <T, R> Case<T, R> matchCase(final Predicate<T> predicate, final Function<? super T, R> closure) {
+    public static <T, R> Case<T, R> matchCase(final Predicate<? super T> predicate,
+                                              final Function<? super T, R> closure) {
         return new Case<>(predicate, closure);
     }
 
@@ -43,10 +44,10 @@ public class Match {
     }
 
     public static class Case<T, R> {
-        private final Predicate<T> predicate;
+        private final Predicate<? super T> predicate;
         private final Function<? super T, R> closure;
 
-        public Case(final Predicate<T> predicate, final Function<? super T, R> closure) {
+        public Case(final Predicate<? super T> predicate, final Function<? super T, R> closure) {
             this.predicate = predicate;
             this.closure = closure;
         }
