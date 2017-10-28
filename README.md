@@ -14,7 +14,8 @@ for comprehension here is still a powerful tool for Java.
 
 The test cases give some good examples of usage
 
-An example of swapping a nest loop for for comp
+An example of swapping a nest loop for for comp (
+[full example](https://github.com/kbreidenbach/utils/blob/master/examples/src/main/java/me/breidenbach/util/examples/ForComprehensionNestedLoopExample.java) )
 
 ```
     private int nestedLoops() {
