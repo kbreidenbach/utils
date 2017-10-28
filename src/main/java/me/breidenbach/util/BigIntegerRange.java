@@ -17,26 +17,6 @@ public class BigIntegerRange extends BaseNumberRange<BigInteger> {
     }
 
     @Override
-    BigInteger nextValue(final BigInteger current, final BigInteger step) {
-        return current.add(step);
-    }
-
-    @Override
-    boolean lessThanEqualTo(final BigInteger left, final BigInteger right) {
-        return left.compareTo(right) <= 0;
-    }
-
-    @Override
-    boolean greaterThanEqualTo(final BigInteger left, final BigInteger right) {
-        return left.compareTo(right) >= 0;
-    }
-
-    @Override
-    int countRemaining(final BigInteger current, final BigInteger end, final BigInteger step) {
-        return ((end.subtract(current)).divide(step)).add(BigInteger.ONE).intValue();
-    }
-
-    @Override
     public BigInteger[] generateRest() {
         final BigInteger[] rest = new BigInteger[getRemaining()];
 
@@ -61,5 +41,25 @@ public class BigIntegerRange extends BaseNumberRange<BigInteger> {
     @Override
     public Iterator<BigInteger> iterator() {
         return this;
+    }
+
+    @Override
+    BigInteger nextValue(final BigInteger current, final BigInteger step) {
+        return current.add(step);
+    }
+
+    @Override
+    boolean lessThanEqualTo(final BigInteger left, final BigInteger right) {
+        return left.compareTo(right) <= 0;
+    }
+
+    @Override
+    boolean greaterThanEqualTo(final BigInteger left, final BigInteger right) {
+        return left.compareTo(right) >= 0;
+    }
+
+    @Override
+    int countRemaining(final BigInteger current, final BigInteger end, final BigInteger step) {
+        return ((end.subtract(current)).divide(step)).add(BigInteger.ONE).intValue();
     }
 }

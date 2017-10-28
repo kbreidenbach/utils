@@ -24,14 +24,6 @@ public class Try<T> {
         }
     }
 
-    private Try(final TryRunnable<? extends T> supplier) {
-        try {
-            this.payload = supplier.run();
-        } catch (final Throwable throwable) {
-            failure = throwable;
-        }
-    }
-
     Try(final T payload) {
         this.payload = payload;
     }

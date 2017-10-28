@@ -20,26 +20,6 @@ public class DoubleRange extends BaseNumberRange<Double> {
     }
 
     @Override
-    Double nextValue(final Double current, final Double step) {
-        return current + step;
-    }
-
-    @Override
-    boolean lessThanEqualTo(final Double left, final Double right) {
-        return left <= right;
-    }
-
-    @Override
-    boolean greaterThanEqualTo(final Double left, final Double right) {
-        return left >= right;
-    }
-
-    @Override
-    int countRemaining(final Double current, final Double end, final Double step) {
-        return (int)(((end - current) / step) + 1.0);
-    }
-
-    @Override
     public Double[] generateRest() {
         final Double[] rest = new Double[getRemaining()];
 
@@ -75,5 +55,25 @@ public class DoubleRange extends BaseNumberRange<Double> {
     @Override
     public Iterator<Double> iterator() {
         return this;
+    }
+
+    @Override
+    Double nextValue(final Double current, final Double step) {
+        return current + step;
+    }
+
+    @Override
+    boolean lessThanEqualTo(final Double left, final Double right) {
+        return left <= right;
+    }
+
+    @Override
+    boolean greaterThanEqualTo(final Double left, final Double right) {
+        return left >= right;
+    }
+
+    @Override
+    int countRemaining(final Double current, final Double end, final Double step) {
+        return (int)(((end - current) / step) + 1.0);
     }
 }

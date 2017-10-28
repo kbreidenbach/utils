@@ -28,26 +28,6 @@ public class IntRange extends BaseNumberRange<Integer> {
     }
 
     @Override
-    Integer nextValue(final Integer current, final Integer step) {
-        return current + step;
-    }
-
-    @Override
-    boolean lessThanEqualTo(final Integer left, final Integer right) {
-        return left <= right;
-    }
-
-    @Override
-    boolean greaterThanEqualTo(final Integer left, final Integer right) {
-        return left >= right;
-    }
-
-    @Override
-    int countRemaining(final Integer current, final Integer end, final Integer step) {
-        return ((end - current) / step) + 1;
-    }
-
-    @Override
     public Integer[] generateRest() {
         final Integer[] rest = new Integer[getRemaining()];
 
@@ -83,5 +63,25 @@ public class IntRange extends BaseNumberRange<Integer> {
     @Override
     public Iterator<Integer> iterator() {
         return this;
+    }
+
+    @Override
+    Integer nextValue(final Integer current, final Integer step) {
+        return current + step;
+    }
+
+    @Override
+    boolean lessThanEqualTo(final Integer left, final Integer right) {
+        return left <= right;
+    }
+
+    @Override
+    boolean greaterThanEqualTo(final Integer left, final Integer right) {
+        return left >= right;
+    }
+
+    @Override
+    int countRemaining(final Integer current, final Integer end, final Integer step) {
+        return ((end - current) / step) + 1;
     }
 }

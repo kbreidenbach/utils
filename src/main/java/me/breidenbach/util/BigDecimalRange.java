@@ -22,26 +22,6 @@ public class BigDecimalRange extends BaseNumberRange<BigDecimal> {
     }
 
     @Override
-    BigDecimal nextValue(final BigDecimal current, final BigDecimal step) {
-        return current.add(step);
-    }
-
-    @Override
-    boolean lessThanEqualTo(final BigDecimal left, final BigDecimal right) {
-        return left.compareTo(right) <= 0;
-    }
-
-    @Override
-    boolean greaterThanEqualTo(final BigDecimal left, final BigDecimal right) {
-        return left.compareTo(right) >= 0;
-    }
-
-    @Override
-    int countRemaining(final BigDecimal current, final BigDecimal end, final BigDecimal step) {
-        return ((end.subtract(current)).divide(step, RoundingMode.FLOOR)).add(BigDecimal.ONE).intValue();
-    }
-
-    @Override
     public BigDecimal[] generateRest() {
         final BigDecimal[] rest = new BigDecimal[getRemaining()];
 
@@ -66,5 +46,25 @@ public class BigDecimalRange extends BaseNumberRange<BigDecimal> {
     @Override
     public Iterator<BigDecimal> iterator() {
         return this;
+    }
+
+    @Override
+    BigDecimal nextValue(final BigDecimal current, final BigDecimal step) {
+        return current.add(step);
+    }
+
+    @Override
+    boolean lessThanEqualTo(final BigDecimal left, final BigDecimal right) {
+        return left.compareTo(right) <= 0;
+    }
+
+    @Override
+    boolean greaterThanEqualTo(final BigDecimal left, final BigDecimal right) {
+        return left.compareTo(right) >= 0;
+    }
+
+    @Override
+    int countRemaining(final BigDecimal current, final BigDecimal end, final BigDecimal step) {
+        return ((end.subtract(current)).divide(step, RoundingMode.FLOOR)).add(BigDecimal.ONE).intValue();
     }
 }

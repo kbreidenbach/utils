@@ -28,26 +28,6 @@ public class LongRange extends BaseNumberRange<Long> {
     }
 
     @Override
-    Long nextValue(final Long current, final Long step) {
-        return current + step;
-    }
-
-    @Override
-    boolean lessThanEqualTo(final Long left, final Long right) {
-        return left <= right;
-    }
-
-    @Override
-    boolean greaterThanEqualTo(final Long left, final Long right) {
-        return left >= right;
-    }
-
-    @Override
-    int countRemaining(final Long current, final Long end, final Long step) {
-        return (int)((end - current) / step) + 1;
-    }
-
-    @Override
     public Long[] generateRest() {
         final Long[] rest = new Long[getRemaining()];
 
@@ -83,5 +63,24 @@ public class LongRange extends BaseNumberRange<Long> {
     @Override
     public Iterator<Long> iterator() {
         return this;
+    }
+    @Override
+    Long nextValue(final Long current, final Long step) {
+        return current + step;
+    }
+
+    @Override
+    boolean lessThanEqualTo(final Long left, final Long right) {
+        return left <= right;
+    }
+
+    @Override
+    boolean greaterThanEqualTo(final Long left, final Long right) {
+        return left >= right;
+    }
+
+    @Override
+    int countRemaining(final Long current, final Long end, final Long step) {
+        return (int)((end - current) / step) + 1;
     }
 }

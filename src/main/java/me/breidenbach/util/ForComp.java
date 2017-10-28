@@ -187,7 +187,8 @@ public class ForComp {
             return result;
         }
 
-        private void handleIterables(final List<List<T>> iterables, final List<List<T>> results, final List row, final int index, final int functionIndex) {
+        private void handleIterables(final List<List<T>> iterables, final List<List<T>> results, final List row,
+                                     final int index, final int functionIndex) {
             for (final Object item : iterables.get(0)) {
                 final ForFunction forFunction = functions.get(functionIndex);
 
