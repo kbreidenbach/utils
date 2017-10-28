@@ -25,7 +25,7 @@ class ForCompTest {
     @Test
     void simple() {
         final List<Integer> numbers = List.of(1, 2);
-        final Stream result = forComp(numbers, forFunction(i -> i.get(0))).yield(l -> l.get(0));
+        final Stream<Integer> result = forComp(numbers, forFunction(i -> i.get(0))).yield(l -> l.get(0));
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(numbers)));
     }
@@ -35,7 +35,7 @@ class ForCompTest {
         final List<Integer> numbers = List.of(1, 2, 3, 4);
         final List<Integer> expected = List.of(2, 4);
         final Predicate<Integer> predicate = i -> i % 2 == 0;
-        final Stream result = forComp(numbers, forFunction(i -> i.get(0))).iff(predicate).yield(l -> l.get(0));
+        final Stream<Integer> result = forComp(numbers, forFunction(i -> i.get(0))).iff(predicate).yield(l -> l.get(0));
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
     }
@@ -50,7 +50,7 @@ class ForCompTest {
                 List.of(2, 20),
                 List.of(2, 40));
 
-        final Stream result = forComp(outer, forFunction(i -> i.get(0))).
+        final Stream<List<Integer>> result = forComp(outer, forFunction(i -> i.get(0))).
                 with(inner, forFunction(j -> j.get(1))).
                 yield(Function.identity());
 
@@ -63,7 +63,7 @@ class ForCompTest {
         final List<Integer> inner = List.of(20, 40);
         final List<Integer> expected = List.of(21, 41, 22, 42);
 
-        final Stream result = forComp(outer).
+        final Stream<Integer> result = forComp(outer).
                 with(inner, forFunction(j -> j.get(0) + j.get(1))).
                 yield(l -> l.get(1));
 
@@ -76,7 +76,7 @@ class ForCompTest {
         final Stream<Integer> inner = IntStream.generate(new IntegerSupplier(20, 20)).limit(2).boxed();
         final List<Integer> expected = List.of(21, 41, 22, 42);
 
-        final Stream result = forComp(outer).
+        final Stream<Integer> result = forComp(outer).
                 with(inner, forFunction(j -> j.get(0) + j.get(1))).
                 yield(l -> l.get(1));
 
@@ -89,7 +89,7 @@ class ForCompTest {
         final List<String> inner = List.of("Dave", "John");
         final List<String> expected = List.of("Hello Dave", "Hello John", "Goodbye Dave", "Goodbye John");
 
-        final Stream result = forComp(outer).
+        final Stream<String> result = forComp(outer).
                 with(inner, forFunction(j -> j.get(0) + " " + j.get(1))).
                 yield(l -> l.get(1));
 
@@ -102,7 +102,7 @@ class ForCompTest {
         final List<String> inner = List.of("Dave", "John");
         final List<String> expected = List.of("HELLO DAVE", "HELLO JOHN", "GOODBYE DAVE", "GOODBYE JOHN");
 
-        final Stream result = forComp(outer).
+        final Stream<String> result = forComp(outer).
                 with(inner, forFunction(j -> (j.get(0) + " " + j.get(1)).toUpperCase())).
                 yield(l -> l.get(1));
 
@@ -115,7 +115,7 @@ class ForCompTest {
         final List<String> inner = List.of("Dave", "John");
         final List<String> expected = List.of("HELLO DAVE", "HELLO JOHN");
 
-        final Stream result = forComp(outer).<String>iff(str -> str.equals("Hello")).
+        final Stream<String> result = forComp(outer).<String>iff(str -> str.equals("Hello")).
                 with(inner, forFunction(j -> (j.get(0) + " " + j.get(1)).toUpperCase())).
                 yield(l -> l.get(1));
 
@@ -127,9 +127,25 @@ class ForCompTest {
         final Try<Integer> test = Try.tryRun(() -> 2);
         final List<Integer> expected = List.of(4);
 
-        final Stream result = forComp(test).
+        final Stream<Integer> result = forComp(test).
                 with(List.of(2), forFunction(i -> i.get(0) + i.get(1))).
                 yield(l -> l.get(1));
+
+        assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
+    }
+
+    @Test
+    void mixedForComp() {
+        final List numbers = List.of(1, 2, 3, 4);
+        final List words = List.of("One", "Two", "Three", "Four");
+        final List expected = List.of(1, "One", 1, "Two", 1, "Three", 1, "Four",
+                2, "One", 2, "Two", 2, "Three", 2, "Four",
+                3, "One", 3, "Two", 3, "Three", 3, "Four",
+                4, "One", 4, "Two", 4, "Three", 4, "Four");
+
+        final Stream<?> result = forComp(numbers).
+                with(words).
+                yieldFlat();
 
         assertThat(result.collect(Collectors.toList()), is(equalTo(expected)));
     }
@@ -149,5 +165,4 @@ class ForCompTest {
             return result;
         }
     }
-
 }

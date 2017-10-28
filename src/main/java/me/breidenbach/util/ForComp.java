@@ -19,35 +19,35 @@ public class ForComp {
         return new ForFunction<>(function);
     }
 
-    public static <T> ForComprehension forComp(List<T> nextIterable, ForFunction<T, ?> function) {
+    public static <T> ForComprehension<T> forComp(List<T> nextIterable, ForFunction<T, ?> function) {
         return new ForComprehension().with(nextIterable, function);
     }
 
-    public static <T> ForComprehension forComp(List<T> nextIterable) {
+    public static <T> ForComprehension<T> forComp(List<T> nextIterable) {
         return new ForComprehension().with(nextIterable);
     }
 
-    public static <T> ForComprehension forComp(Stream<T> stream, ForFunction<T, ?> function) {
+    public static <T> ForComprehension<T> forComp(Stream<T> stream, ForFunction<T, ?> function) {
         return new ForComprehension().with(stream, function);
     }
 
-    public static <T> ForComprehension forComp(Stream<T> stream) {
+    public static <T> ForComprehension<T> forComp(Stream<T> stream) {
         return new ForComprehension().with(stream);
     }
 
-    public static <T> ForComprehension forComp(T[] nextItems) {
+    public static <T> ForComprehension<T> forComp(T[] nextItems) {
         return new ForComprehension().with(nextItems);
     }
 
-    public static <T> ForComprehension forComp(T[] nextItems, ForFunction<T, ?> function) {
+    public static <T> ForComprehension<T> forComp(T[] nextItems, ForFunction<T, ?> function) {
         return new ForComprehension().with(nextItems, function);
     }
 
-    public static <T> ForComprehension forComp(Try<T> nextItem) {
+    public static <T> ForComprehension<T> forComp(Try<T> nextItem) {
         return new ForComprehension().with(nextItem);
     }
 
-    public static <T> ForComprehension forComp(Try<T> nextItem, ForFunction<Try<T>, ?> function) {
+    public static <T> ForComprehension<T> forComp(Try<T> nextItem, ForFunction<Try<T>, ?> function) {
         return new ForComprehension().with(nextItem, function);
     }
 
@@ -63,48 +63,48 @@ public class ForComp {
         }
     }
 
-    public static class ForComprehension {
-        private final List<List<?>> iterables = new ArrayList<>();
-        private final List<ForFunction> functions = new ArrayList<>();
+    public static class ForComprehension<T> {
+        private final List<List<T>> iterables = new ArrayList<>();
+        private final List<ForFunction<T, ?>> functions = new ArrayList<>();
 
         private ForComprehension() {
         }
 
-        public <T, R> ForComprehension with(List<T> nextIterable, ForFunction<T, R> function) {
+        public <R> ForComprehension<T> with(List<T> nextIterable, ForFunction<T, R> function) {
             functions.add(function);
             iterables.add(nextIterable);
             return this;
         }
 
-        public <T> ForComprehension with(List<T> nextIterable) {
+        public ForComprehension<T> with(List<T> nextIterable) {
             return with(nextIterable, null);
         }
 
-        public <T, R> ForComprehension with(Stream<T> stream, ForFunction<T, R> function) {
+        public <R> ForComprehension<T> with(Stream<T> stream, ForFunction<T, R> function) {
             return with(stream.collect(Collectors.toList()), function);
         }
 
-        public <T> ForComprehension with(Stream<T> stream) {
+        public ForComprehension<T> with(Stream<T> stream) {
             return with(stream.collect(Collectors.toList()), null);
         }
 
-        public final <T> ForComprehension with(T[] nextItems) {
+        public final ForComprehension<T> with(T[] nextItems) {
             return with(List.of(nextItems), null);
         }
 
-        public final <T, R> ForComprehension with(T[] nextItems, ForFunction<T, R> function) {
+        public final <R> ForComprehension<T> with(T[] nextItems, ForFunction<T, R> function) {
             return with(List.of(nextItems), function);
         }
 
-        public final <T> ForComprehension with(Try<T> nextItems) {
-            return with(List.of(nextItems), null);
+        public final ForComprehension<T> with(T nextItem) {
+            return with(List.of(nextItem), null);
         }
 
-        public final <T, R> ForComprehension with(Try<T> nextItems, ForFunction<Try<T>, R> function) {
-            return with(List.of(nextItems), function);
+        public final <R> ForComprehension<T> with(T nextItem, ForFunction<T, R> function) {
+            return with(List.of(nextItem), function);
         }
 
-        public <T> ForComprehension iff(Predicate<T> predicate) {
+        public ForComprehension<T> iff(Predicate<T> predicate) {
             final int index = iterables.size() - 1;
             final List list = iterables.get(index);
             final List newList = new ArrayList(list.size());
@@ -117,41 +117,41 @@ public class ForComp {
             return this;
         }
 
-        public <R> Stream<R> yieldFlat() {
-            return yield().flatMap(l -> ((List<R>)l).stream());
+        public Stream<T> yieldFlat() {
+            return yield().flatMap(l -> ((List<T>)l).stream());
         }
 
-        public <R> Stream<R> yieldFlat(Function<List<?>, R> function) {
+        public <R> Stream<R> yieldFlat(Function<List<T>, R> function) {
             return yield(function).flatMap(l -> ((List<R>)l).stream());
         }
 
-        public <R> Stream<R> yield() {
-            return yield((l) -> (R)l);
+        public Stream<T> yield() {
+            return yield((l) -> (T)l);
         }
 
-        public <R> Stream<R> yield(Function<List<?>, R> function) {
+        public <R> Stream<R> yield(Function<List<T>, R> function) {
             switch (iterables.size()) {
                 case 0 : return Stream.empty();
                 default : {
-                    final Stream<List<?>> stream = mapStream(handleIterables().stream());
+                    final Stream<List<T>> stream = mapStream(handleIterables().stream());
                     return stream.map(function);
                 }
             }
         }
 
-        private Stream<List<?>> mapStream(Stream<List<?>> stream) {
+        private Stream<List<T>> mapStream(Stream<List<T>> stream) {
             return stream.filter(Objects::nonNull).map(this::processResult);
         }
 
-        private <T> List<T> processResult(List<T> data) {
+        private List<T> processResult(List<T> data) {
             final List<T> result = new ArrayList<>(data.size());
             result.addAll(data);
             return result;
         }
 
-        private List<List<?>> handleIterables() {
-            final List<Iterable<?>> iter = new ArrayList<>();
-            final List<List<?>> result = new ArrayList<>();
+        private List<List<T>> handleIterables() {
+            final List<Iterable<T>> iter = new ArrayList<>();
+            final List<List<T>> result = new ArrayList<>();
             final List<?> row = new ArrayList(iterables.size());
 
             for (int i = 0; i < iterables.size(); i++) row.add(null);
@@ -161,7 +161,7 @@ public class ForComp {
             return result;
         }
 
-        private void handleIterables(List<List<?>> iterables, List<List<?>> results, List row, int index, int functionIndex) {
+        private void handleIterables(List<List<T>> iterables, List<List<T>> results, List row, int index, int functionIndex) {
             for (Object item : iterables.get(0)) {
                 final ForFunction forFunction = functions.get(functionIndex);
 

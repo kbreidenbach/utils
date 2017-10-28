@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.breidenbach.util.Match.typeCase;
 import static me.breidenbach.util.Match.defaultCase;
 import static me.breidenbach.util.Match.match;
 import static me.breidenbach.util.Match.matchCase;
+import static me.breidenbach.util.Match.typeCase;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;

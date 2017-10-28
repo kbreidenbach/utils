@@ -27,8 +27,7 @@ public class ForComprehensionNestedLoopExample {
          return forComp(intStream(0, 99)).
                 with(intStream(0, 49)).
                 with(intStream(0, 19)).
-                yieldFlat().mapToInt(i -> (Integer)i).sum();
-
+                yieldFlat().mapToInt(i -> i).sum();
     }
 
     public static void main(String[] args) {
