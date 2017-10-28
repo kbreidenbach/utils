@@ -32,12 +32,11 @@ An example of swapping a nest loop for for comp
     }
 
     private int nestedForComp() {
-         return forComp(intStream(0, 99)).
-                with(intStream(0, 49)).
-                with(intStream(0, 19)).
+         return forComp(stream(0, 99)).
+                with(stream(0, 49)).
+                with(stream(0, 19)).
                 yieldFlat().mapToInt(i -> i).sum();
     }
-    
 ```
 
 #### Match

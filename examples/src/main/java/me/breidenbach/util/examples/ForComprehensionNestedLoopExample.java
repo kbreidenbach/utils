@@ -1,7 +1,7 @@
 package me.breidenbach.util.examples;
 
 import static me.breidenbach.util.ForComp.forComp;
-import static me.breidenbach.util.IntRange.intStream;
+import static me.breidenbach.util.Range.stream;
 
 /**
  * @author Kevin E. Breidenbach
@@ -24,9 +24,9 @@ class ForComprehensionNestedLoopExample {
     }
 
     private int nestedForComp() {
-         return forComp(intStream(0, 99)).
-                with(intStream(0, 49)).
-                with(intStream(0, 19)).
+         return forComp(stream(0, 99)).
+                with(stream(0, 49)).
+                with(stream(0, 19)).
                 yieldFlat().mapToInt(i -> i).sum();
     }
 
