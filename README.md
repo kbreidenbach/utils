@@ -87,7 +87,7 @@ Some contrived examples (
 
         final String answer = match(pi,
                 typeCase(Integer.class, j -> "Not today"),
-                matchCase(j -> (Double)j == 3.1415927, j-> "Eureka!"));
+                matchCase(j -> j == 3.1415927, j-> "Eureka!"));
 
         if (!answer.equals("Eureka!")) throw new RuntimeException("Sunk");
 ```

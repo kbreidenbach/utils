@@ -27,7 +27,7 @@ public class Match {
         return new Default<>(closure);
     }
 
-    public static <T, R> Case<T, R> typeCase(final Class<? extends T> type, final Function<? super T, R> closure) {
+    public static <T, R> Case<T, R> typeCase(final Class<?> type, final Function<? super T, R> closure) {
         return new Type<>(type, closure);
     }
 
@@ -38,7 +38,7 @@ public class Match {
     }
 
     public static class Type<T, R> extends Case<T, R> {
-        public Type(final Class<? extends T> type, final Function<? super T, R> closure) {
+        public Type(final Class<?> type, final Function<? super T, R> closure) {
             super(type::isInstance, closure);
         }
     }
