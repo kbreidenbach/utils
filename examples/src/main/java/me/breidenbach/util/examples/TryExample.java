@@ -39,13 +39,8 @@ class TryExample {
         }
     }
 
-    /* Why not use method references?
-     * Because the way Java handles method references is that it if the object being run on is null it will throw
-     * a NPE before the lambda. What we really want to happen is the NPE thrown within the lambda so it can be caught
-     * in the Try. However, if you know your object can't be null then method
-     */
     private Try<Connection> getConnection() {
-        return Try.tryRun(() -> dataSource.getConnection());
+        return Try.tryRun(dataSource::getConnection);
     }
 
     private Try<PreparedStatement> prepareStatement(final Connection connection, final String sql) {
