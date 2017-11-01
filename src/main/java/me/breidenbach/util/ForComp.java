@@ -19,7 +19,7 @@ public class ForComp {
         return new ForFunction<>(function);
     }
 
-    public static <T> ForComprehension<T> forComp(final List<T> nextIterable, final ForFunction<T, ?> function) {
+    public static <T> ForComprehension<T> forComp(final List<T> nextIterable, final ForFunction<? super T, ?> function) {
         return new ForComprehension().with(nextIterable, function);
     }
 
@@ -27,7 +27,7 @@ public class ForComp {
         return new ForComprehension().with(nextIterable);
     }
 
-    public static <T> ForComprehension<T> forComp(final Stream<T> stream, final ForFunction<T, ?> function) {
+    public static <T> ForComprehension<T> forComp(final Stream<T> stream, final ForFunction<? super T, ?> function) {
         return new ForComprehension().with(stream, function);
     }
 
@@ -39,7 +39,7 @@ public class ForComp {
         return new ForComprehension().with(nextItems);
     }
 
-    public static <T> ForComprehension<T> forComp(final T[] nextItems, final ForFunction<T, ?> function) {
+    public static <T> ForComprehension<T> forComp(final T[] nextItems, final ForFunction<? super T, ?> function) {
         return new ForComprehension().with(nextItems, function);
     }
 
@@ -47,7 +47,8 @@ public class ForComp {
         return new ForComprehension().with(nextItem);
     }
 
-    public static <T> ForComprehension<T> forComp(final Try<T> nextItem, final ForFunction<Try<T>, ?> function) {
+    public static <T> ForComprehension<T> forComp(final Try<T> nextItem,
+                                                  final ForFunction<Try<? super T>, ?> function) {
         return new ForComprehension().with(nextItem, function);
     }
 
@@ -65,12 +66,12 @@ public class ForComp {
 
     public static class ForComprehension<T> {
         private final List<List<T>> iterables = new ArrayList<>();
-        private final List<ForFunction<T, ?>> functions = new ArrayList<>();
+        private final List<ForFunction<? super T, ?>> functions = new ArrayList<>();
 
         private ForComprehension() {
         }
 
-        public <R> ForComprehension<T> with(final List<T> nextIterable, final ForFunction<T, R> function) {
+        public <R> ForComprehension<T> with(final List<T> nextIterable, final ForFunction<? super T, R> function) {
             functions.add(function);
             iterables.add(nextIterable);
             return this;
@@ -80,7 +81,7 @@ public class ForComp {
             return with(nextIterable, null);
         }
 
-        public <R> ForComprehension<T> with(final Stream<T> stream, final ForFunction<T, R> function) {
+        public <R> ForComprehension<T> with(final Stream<T> stream, final ForFunction<? super T, R> function) {
             return with(stream.collect(Collectors.toList()), function);
         }
 
@@ -92,7 +93,7 @@ public class ForComp {
             return with(List.of(nextItems), null);
         }
 
-        public final <R> ForComprehension<T> with(final T[] nextItems, final ForFunction<T, R> function) {
+        public final <R> ForComprehension<T> with(final T[] nextItems, final ForFunction<? super T, R> function) {
             return with(List.of(nextItems), function);
         }
 
@@ -100,11 +101,11 @@ public class ForComp {
             return with(List.of(nextItem), null);
         }
 
-        public final <R> ForComprehension<T> with(final T nextItem, final ForFunction<T, R> function) {
+        public final <R> ForComprehension<T> with(final T nextItem, final ForFunction<? super T, R> function) {
             return with(List.of(nextItem), function);
         }
 
-        public ForComprehension<T> iff(final Predicate<T> predicate) {
+        public ForComprehension<T> iff(final Predicate<? super T> predicate) {
             final int index = iterables.size() - 1;
             final List<T> list = iterables.get(index);
             final List<T> newList = new ArrayList(list.size());
@@ -121,7 +122,7 @@ public class ForComp {
             return yield().flatMap(l -> ((List<T>)l).stream());
         }
 
-        public <R> Stream<R> yieldFlat(final Function<List<T>, R> function) {
+        public <R> Stream<R> yieldFlat(final Function<? super List<T>, R> function) {
             return yield(function).flatMap(l -> ((List<R>)l).stream());
         }
 
@@ -138,7 +139,7 @@ public class ForComp {
             }
         }
 
-        public <R> Stream<R> yield(final Function<List<T>, R> function, final int index, final int...indexes) {
+        public <R> Stream<R> yield(final Function<? super List<T>, R> function, final int index, final int...indexes) {
             if (indexes.length == 0) {
                 return yield(l -> function.apply(List.of(l.get(index))));
             } else {
@@ -155,7 +156,7 @@ public class ForComp {
             return yield((l) -> (T)l);
         }
 
-        public <R> Stream<R> yield(final Function<List<T>, R> function) {
+        public <R> Stream<R> yield(final Function<? super List<T>, R> function) {
             switch (iterables.size()) {
                 case 0 : return Stream.empty();
                 default : {
